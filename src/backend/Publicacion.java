@@ -3,12 +3,13 @@ package backend;
 import java.time.LocalDateTime;
 
 public class Publicacion {
-    private static int id;
+    private int id;
     private int idUsuario;
     private String contenido;
     private  LocalDateTime fecha;
-    public Publicacion( Usuario usuario, String contenido ){
-        this.id++;
+    public Publicacion(int idPublicacion, int idU, String contenido ){
+        this.id=idPublicacion;
+        this.idUsuario=idU;
         this.contenido=contenido;
         this.fecha= LocalDateTime.now();
     }
@@ -16,22 +17,19 @@ public class Publicacion {
         this.fecha= LocalDateTime.now();
     }
 
-    public Publicacion creacionObjetoActual(int id, int idUsuario, String contenido, LocalDateTime fecha){
+    /*public Publicacion creacionObjetoActual(int id, int idUsuario, String contenido, LocalDateTime fecha){
         Publicacion actual= new Publicacion();
         actual.setId(id);
         actual.setIdUsuario(idUsuario);
         actual.setContenido(contenido);
         actual.setFecha(fecha);
         return actual;
-    }
+    }*/
 
     public int getId() {
         return id;
     }
 
-    private void setId(Integer id) {
-        this.id = id;
-    }
 
     public int getIdUsuario() {
         return idUsuario;

@@ -24,24 +24,25 @@ public class RedSocial {
         servicioUsuario=new ServicioUsuario();
         //agregarPublicacion(publicacionDefecto());
         //lecturaArchivos();
-        publicacionDefecto();
+        //publicacionDefecto();
     }
+    /*
     public RedSocial(){
         servicioReaccion= new ServicioReaccion();
         servicioPublicacion =new ServicioPublicacion();
         servicioUsuario=new ServicioUsuario();
         publicacionDefecto();
-        /*listaPublicaciones=new ArrayList<>();
+        listaPublicaciones=new ArrayList<>();
         listaUsuarios=new ArrayList<>();
         listaReacciones=new ArrayList<>();
         agregarPublicacion(publicacionDefecto());
         this.usuario=listaUsuarios.get(0);
-        lecturaArchivos();*/
+        lecturaArchivos();
     }
 
     public void crearUsuario(String nombreCompleto){
-        Usuario nuevo=new Usuario(nombreCompleto);
-        servicioUsuario.agregarDatosCSV(nuevo.getNombre());
+        //Usuario nuevo=new Usuario(nombreCompleto);
+      //  servicioUsuario.agregarDatosCSV(nuevo.getNombre());
         //listaUsuarios.add(nuevo);
     }
 
@@ -57,13 +58,14 @@ public class RedSocial {
 
     public void crearReacion(int idPublicaion,String nombre,int idUsuario){
         Reacciones nuevo=new Reacciones(idPublicaion, nombre, idUsuario);
-        servicioReaccion.agregarDatosCSV(nuevo.getId(), nuevo.getNombre(),nuevo.getIdUsuario());
+        servicioReaccion.agregarDatosCSV(nuevo.getIdPublicacion(), nuevo.getNombre(),nuevo.getIdUsuario());
     }
      public List obtenerListasDePublicaciones() {
         return servicioPublicacion.obtenerTodasPublicaciones();
     }
     public List obtenerListasDeUsuarios() {
-        return servicioUsuario.obtenerTodosUsuarios();
+        //return servicioUsuario.obtenerTodosUsuarios();
+        return null;
     }
 
     public List obtenerListasReacciones() {
@@ -81,10 +83,10 @@ public class RedSocial {
     }
 
     private void publicacionDefecto(){
-        Usuario usu=new Usuario("Maria Jimenes");
+        Usuario usu=new Usuario(1,"Maria Jimenes");
         //usu.agregarId();
         //servicioUsuario.agregarDatosCSV(usu.getId(), usu.getNombre());
-        servicioUsuario.agregarDatosCSV(usu.getNombre());
+//        servicioUsuario.agregarDatosCSV(usu.getNombre());
         cambiarUsuario(usu);
         Publicacion p1=new Publicacion(usu,"El Pique Macho y el arroz, no le va, no? ");
         p1.agregarId();
@@ -94,5 +96,5 @@ public class RedSocial {
     }
 
 
-
+*/
 }

@@ -7,64 +7,86 @@ import java.util.List;
 public class ServicioPublicacion {
 
     GestorDeArchivos archivo;
-    public ServicioPublicacion(){
-        archivo= new GestorDeArchivos("Publicaciones");
+    List<Publicacion> listaPublicaciones;
+
+    public ServicioPublicacion() {
+        listaPublicaciones = new ArrayList<>();
+        archivo = new GestorDeArchivos("Publicaciones");
+        cargarDatosLista();
     }
 
-    public void agregarDatosCSV(int id,int idU,String contenido, LocalDateTime fecha){
-        archivo.escribirDatosEnCSV(id+","+idU+","+contenido+","+fecha);
+    public void agregarPublicacion(int idU, String contenido) {
+        String[] pro = archivo.leerDatosCSV();
+        if (pro[0].equals("")) {
+            int id = 1;
+            Publicacion actual = new Publicacion(id, idU, contenido);
+            listaPublicaciones.add(actual);
+            archivo.escribirDatosEnCSV(id + "," + idU + "," + contenido + "," + actual.getFecha());
+        } else {
+            int id = pro.length + 1;
+            Publicacion actual = new Publicacion(id, idU, contenido);
+            listaPublicaciones.add(actual);
+            archivo.escribirDatosEnCSV(id + "," + idU + "," + contenido + "," + actual.getFecha());
+        }
     }
 
-    public String buscarPorIdPublicacionNombre(int idPublicacion){
-        String res="";
-        String []datos=archivo.leerDatosCSV();
-        for (String dato: datos){
-            String [] cad=dato.split(",");
-            if (cad[0].equals(""+idPublicacion)){
-                res=cad[1];
+    public void eliminarPublicacion(int idP) {
+        for (int i = 0; i < listaPublicaciones.size(); i++) {
+            Publicacion publicacion = listaPublicaciones.get(i);
+            if (publicacion.getId() == idP) {
+                listaPublicaciones.remove(i);
+            }
+        }
+
+    }
+
+    public Publicacion buscarPublicacion(int idP) {
+        Publicacion res = null;
+        for (int i = 0; i < listaPublicaciones.size(); i++) {
+            Publicacion publicacion = listaPublicaciones.get(i);
+            if (publicacion.getId() == idP) {
+                res = listaPublicaciones.get(i);
             }
         }
         return res;
     }
-    public Publicacion buscarPorIdPublicacionObejto(int idPublicacion){
-        Publicacion res= new Publicacion();
-        String []datos=archivo.leerDatosCSV();
-        for (String dato: datos){
-            String [] cad=dato.split(",");
-            if (cad[0].equals(""+idPublicacion)){
-                int id=Integer.parseInt(cad[0]);
-                int idU=Integer.parseInt(cad[1]);
-                LocalDateTime f= LocalDateTime.parse(cad[3]);
-                res.creacionObjetoActual(id, idU, cad[2],f);
+
+    public List<Publicacion> getListaPublicaciones() {
+        return listaPublicaciones;
+    }
+
+    public void actualizarDatos(String[] nombre) {
+        archivo.escribirDeCerroEnCSV(nombre);
+    }
+
+    private void cargarDatosLista() {
+        String[] datos = archivo.leerDatosCSV();
+        if (!datos[0].equals("")) {
+            for (String dato : datos) {
+                String[] cad = dato.split(",");
+                String contenido = contruirContenido(cad);
+                LocalDateTime f = LocalDateTime.parse(cad[cad.length - 1]);
+                int idP = Integer.parseInt(cad[0]);
+                int idU = Integer.parseInt(cad[1]);
+                Publicacion publi = new Publicacion(idP, idU, contenido);
+                publi.setFecha(f);
+                listaPublicaciones.add(publi);
+            }
+        }
+    }
+
+    private String contruirContenido(String[] cad) {
+        String res = "";
+        for (int i = 2; i < cad.length - 1; i++) {
+            if (i == cad.length - 2) {
+                res += cad[i];
+            } else {
+                res += cad[i] + ",";
             }
         }
         return res;
     }
 
-    public List<Publicacion> obtenerTodasPublicaciones(){
-        Publicacion act=new Publicacion();
-        List<Publicacion> lista=new ArrayList<>();
-        String []datos=archivo.leerDatosCSV();
 
-        for (String dato: datos){
-            String [] cad=dato.split(",");
-            String contenido=contruirContenido(cad);
-            LocalDateTime f=LocalDateTime.parse(cad[cad.length-1]);
-
-            act=act.creacionObjetoActual(Integer.parseInt(cad[0]), Integer.parseInt(cad[1]),contenido,f);
-            lista.add(act);
-        }
-        return lista;
-    }
-    private String contruirContenido(String [] cad){
-        String res ="";
-        for (int i=2; i<cad.length-1; i++){
-            if (i== cad.length-2) {
-               res+=cad[i];
-            }else {
-                res+=cad[i]+",";
-            }
-        }
-        return res;
-    }
 }
+

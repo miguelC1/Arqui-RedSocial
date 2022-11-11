@@ -6,31 +6,34 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 public class UI {
     Scanner sc;
-    RedSocial redSocial;
-    ArrayList<Usuario>listaUsuario;
+    ServicioUsuario servicioUsuario;
+    ServicioReaccion servicioReaccion;
+    ServicioPublicacion servicioPublicacion;
+    Usuario usuario;
     public UI(){
         sc=new Scanner(System.in);
-        redSocial =new RedSocial();
-        listaUsuario=new ArrayList<>();
+        servicioPublicacion=new ServicioPublicacion();
+        servicioReaccion=new ServicioReaccion();
+        servicioUsuario=new ServicioUsuario();
+        usuario=new Usuario(1, servicioUsuario.buscarUsuario(1));
     }
 
     public  void iniciar(){
+        publicacionDefecto();
         menu();
     }
     public void mostrarUsuarios(){
-        List<Usuario>listaU= redSocial.obtenerListasDeUsuarios();
-        int i=1;
-        for(Usuario usu: listaU){
-            System.out.println(i+") "+ usu.getNombre());
-            i++;
+        List<Integer>listaU= servicioUsuario.getUsuarios();
+
+        for(int i=0; i< listaU.size(); i++){
+            System.out.println(listaU.get(i)+") "+ servicioUsuario.buscarUsuario(listaU.get(i)));
         }
         System.out.println();
     }
     public void crearUsuario(){
-        redSocial.crearUsuario(leerEntreada());
+        servicioUsuario.agregarUsuario(leerEntreada());
     }
     public void opcionUsuario(){
-        System.out.println("usuario actual "+ redSocial.usuarioAtual().getNombre());
         System.out.println("1) CREAR NUEVO USUARIO");
         System.out.println("2) CAMBIAR USUARIO");
         int nu=sc.nextInt();
@@ -40,14 +43,14 @@ public class UI {
         }
         else {
             mostrarUsuarios();
-            List<Usuario>listaU= redSocial.obtenerListasDeUsuarios();
             System.out.println("ELEGIR UN USUARIO");
             int n=sc.nextInt();
-            redSocial.cambiarUsuario(listaU.get(n-1));
+            usuario=new Usuario(n,servicioUsuario.buscarUsuario(n));
+            //redSocial.cambiarUsuario(listaU.get(n-1));
         }
     }
     private void mostrarMuro(){
-        List<Publicacion>listaP=redSocial.obtenerListasDePublicaciones();
+        List<Publicacion>listaP=servicioPublicacion.getListaPublicaciones();
         System.out.println("mostarMuro"+ listaP.size());
         for(int i=0; i< listaP.size(); i++){
             System.out.println("(== "+(i+1)+" ==)");
@@ -55,18 +58,18 @@ public class UI {
         }
     }
 
-    public void crearPublicacion (Usuario usuario){
+    public void crearPublicacion (){
         System.out.println("=========TEXTO PUBLICACION======");
         System.out.println("Ingrese Contenido: ");
         String texto=leerEntreada();
-        redSocial.crearPublicacion(texto);
+        servicioPublicacion.agregarPublicacion(usuario.getId(),texto);
         //nuevaP.setFecha("27/oct/2022");
     }
 
     private void mostrarPublicidad (Publicacion publicacion){
         System.out.println ("*********************************RED SOCIAL***************************************************");
         System.out.println ("**********************************************************************************************");
-        mostrar(redSocial.usuarioAtual().getNombre());
+        mostrar(usuario.getNombre());
         DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy  hh:mm a");
         String fechaString = FOMATTER.format(publicacion.getFecha());
         mostrar(fechaString);
@@ -125,8 +128,7 @@ public class UI {
                 mostrarMuro();
             }
             else if (caso==2){
-                Usuario u1= redSocial.usuarioAtual();
-                crearPublicacion(u1);
+                crearPublicacion();
                 mostrarMuro();
             }else if(caso==3){
                 reaccionarPublicacion();
@@ -153,7 +155,7 @@ public class UI {
         System.out.println("numero REaccion"+nR);
         String reaccionar=Reacion.values()[nR].toString();
         System.out.println("numero REaccion"+nR);
-        redSocial.crearReacion(nP,reaccionar,redSocial.usuarioAtual().getId());
+        servicioReaccion.agregarReacciones(nP,reaccionar, usuario.getId());
     }
     public void mostrarMenuIntereses(){
         System.out.println("MENU de OPERACIONES");
@@ -167,17 +169,26 @@ public class UI {
     }
 
     public void mostrarPublicaciones(){
-        List<Publicacion> lista=redSocial.obtenerListasDePublicaciones();
+        List<Publicacion> lista=servicioPublicacion.getListaPublicaciones();
         for (int i=0; i< lista.size(); i++){
             Publicacion act=lista.get(i);
             System.out.println(act.getId()+" = "+act.getIdUsuario()+" = "+ act.getContenido()+" = "+ act.getFecha());
         }
     }
     public void mostrarCSVReaciones(){
-        List<Reacciones> lista=redSocial.obtenerListasReacciones();
+        List<Reacciones> lista=servicioReaccion.getListaReacciones();
         for (int i=0; i< lista.size(); i++){
-            System.out.println(lista.get(i).getId()+" "+ lista.get(i).getNombre()+" "+lista.get(i).getIdUsuario());
+            System.out.println(lista.get(i).getIdPublicacion()+" "+ lista.get(i).getNombre()+" "+lista.get(i).getIdUsuario());
         }
+    }
+
+    private void publicacionDefecto(){
+       servicioUsuario.agregarUsuario("Maria Jimenes");
+
+      // servicioPublicacion.agregarPublicacion(1,"El Pique Macho y el arroz, no le va, no? ");
+
+        //p1.setFecha(LocalDateTime.parse("2022-11-06T19:12:04.213293600"));
+        //servicioPublicacion.agregarDatosCSV(p1.getId(),p1.getIdUsuario(), p1.getContenido(),p1.getFecha());
     }
 
 

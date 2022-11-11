@@ -36,6 +36,16 @@ public class GestorDeArchivos {
             throw new RuntimeException(e);
         }
     }
+    public void escribirDeCerroEnCSV(String [] contenido){
+        try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre))) {
+            for (String fila: contenido){
+                escritor.printf(fila + "\n");
+            }
+            escritor.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public String[] leerDatosCSV(){
         String cont = readFile(nombre);
 
