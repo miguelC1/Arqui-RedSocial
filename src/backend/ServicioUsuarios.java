@@ -3,52 +3,56 @@ package backend;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServicioUsuario {
+public class ServicioUsuarios {
     GestorDeArchivos archivo;
-    List<Usuario>listaUsuarios;
+    List<Usuario> listaDeUsuarios;
 
-    public ServicioUsuario(){
+    public ServicioUsuarios(){
         archivo= new GestorDeArchivos("Usuarios");
-        listaUsuarios= new ArrayList<>();
+        listaDeUsuarios = new ArrayList<>();
+        usuarioPorDefecto();
         cargarDatosLista();
         mostraLista();
     }
 
+    private void usuarioPorDefecto(){
+        archivo.escribirDatosEnCSV("1,Maria Jimenes");
+    }
     public void agregarUsuario(String nombre) {
         String [] pro=archivo.leerDatosCSV();
         if (pro[0].equals("")){
             int id=1;
             archivo.escribirDatosEnCSV(id+","+nombre);
-            listaUsuarios.add(new Usuario(id,nombre));
+            listaDeUsuarios.add(new Usuario(id,nombre));
         }else {
             int id=pro.length+1;
             archivo.escribirDatosEnCSV(id+","+nombre);
-            listaUsuarios.add(new Usuario(id,nombre));
+            listaDeUsuarios.add(new Usuario(id,nombre));
         }
     }
 
     public void eliminarUsuario(String nombre) {
-        for (int i=0; i<listaUsuarios.size(); i++){
-            Usuario usu=listaUsuarios.get(i);
+        for (int i = 0; i< listaDeUsuarios.size(); i++){
+            Usuario usu= listaDeUsuarios.get(i);
             if(usu.getNombre().equals(nombre)){
-                listaUsuarios.remove(i);
+                listaDeUsuarios.remove(i);
             }
         }
 
     }
 
-    public String buscarUsuario(int id) {
-        String res="";
-        for (int i=0; i<listaUsuarios.size(); i++){
-            Usuario usu=listaUsuarios.get(i);
-            if(usu.getId()==id){
-                res=usu.getNombre();
+    public Usuario buscarUsuario(int id) {
+        Usuario usuario=null;
+        for (int i=0; i<listarUsuarios().size(); i++){
+            int idU= listarUsuarios().get(i);
+            if(idU==id){
+                usuario=new Usuario(id, listaDeUsuarios.get(i).getNombre());
             }
         }
-        return res;
+        return usuario;
     }
 
-    public List<Integer> getUsuarios() {
+    public List<Integer> listarUsuarios() {
         List<Integer>lista=new ArrayList<>();
         String []datos=archivo.leerDatosCSV();
         for (String dato: datos){
@@ -69,13 +73,13 @@ public class ServicioUsuario {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 int idA = Integer.parseInt(cad[0]);
-                listaUsuarios.add(new Usuario(idA, cad[1]));
+                listaDeUsuarios.add(new Usuario(idA, cad[1]));
             }
         }
     }
     private void mostraLista() {
-        for (Usuario dato : listaUsuarios) {
-            System.out.println("son  "+dato.getId()+" "+dato.getNombre());
+        for (Usuario dato : listaDeUsuarios) {
+            // System.out.println("son  "+dato.getId()+" "+dato.getNombre());
         }
 
     }

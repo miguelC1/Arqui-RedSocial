@@ -19,7 +19,7 @@ public class GestorDeArchivos {
     private void crearArchivo(String nombre){
         File archivo = new File(nombre);
         try {
-            System.out.println("ya sta creado");
+            //System.out.println("ya sta creado");
             FileWriter escritor = new FileWriter(archivo,true);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -28,7 +28,7 @@ public class GestorDeArchivos {
     public void escribirDatosEnCSV(String contenido){
         try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre,true))) {
             if(!existeDato(contenido)) {
-                System.out.println("no existe");
+                //System.out.println("no existe");
                 escritor.printf(contenido + "\n");
                 escritor.close();
             }
@@ -81,7 +81,7 @@ public class GestorDeArchivos {
             }
 
         } catch (IOException e) {
-        throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
         finally {
             if (entrada != null) {

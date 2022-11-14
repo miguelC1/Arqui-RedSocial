@@ -1,37 +1,51 @@
 package backend;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class ServicioReaccion {
+public class ServicioReacciones {
     GestorDeArchivos archivo;
     List<Reacciones> listaReacciones;
 
-    public ServicioReaccion(){
+    public ServicioReacciones(){
         archivo= new GestorDeArchivos("Reacciones");
         listaReacciones=new ArrayList<>();
         cargarDatosLista();
     }
 
-    public void agregarReacciones(int idP,String nombre, int idU) {
+    public void agregarReacciones(int idPublicacion, int idUsuario, Emocion reaccion) {
         String [] pro=archivo.leerDatosCSV();
+        String r= reaccion.name();
         if (pro[0].equals("")){
-            archivo.escribirDatosEnCSV(idP+","+nombre+","+idU);
-            listaReacciones.add(new Reacciones(idP,nombre,idU));
+            archivo.escribirDatosEnCSV(idPublicacion+","+r+","+idUsuario);
+            listaReacciones.add(new Reacciones(idPublicacion,r,idUsuario));
         }else {
-            if(verifivarReaccionUsuario(idP,idU)){
-                eliminarReacccion(idP, idU);
-                listaReacciones.add(new Reacciones(idP,nombre,idU));
+            if(verifivarReaccionUsuario(idPublicacion,idUsuario)){
+                eliminarReacccion(idPublicacion, idUsuario);
+                listaReacciones.add(new Reacciones(idPublicacion,r,idUsuario));
                 actualizarDatos(converiEnCadena());
             }
             else{
-                archivo.escribirDatosEnCSV(idP+","+nombre+","+idU);
-                listaReacciones.add(new Reacciones(idP,nombre,idU));
+                archivo.escribirDatosEnCSV(idPublicacion+","+reaccion+","+idUsuario);
+                listaReacciones.add(new Reacciones(idPublicacion,r,idUsuario));
             }
 
         }
     }
+
+
+    public Map<Emocion,Integer> listarResumenReacciones(int idPublicacion) {
+        Map<Emocion,Integer> map= new HashMap<>();
+        for (int i=0; i<Emocion.values().length; i++){
+            int cantidad=contarReaccionesConIdyNombre(idPublicacion,Emocion.values()[i].name());
+            Emocion actual=Emocion.values()[i];
+            map.put(actual,cantidad);
+        }
+
+        return map;
+    }
+
 
     public void eliminarReacccion(int idP, int idU) {
         for (int i=0; i< listaReacciones.size(); i++){
@@ -44,11 +58,11 @@ public class ServicioReaccion {
     }
 
 
-    public List<Reacciones> getListaReacciones() {
+    public List<Reacciones> listarReacciones() {
         return listaReacciones;
     }
 
-    public void actualizarDatos(String [] nombre) {
+    private void actualizarDatos(String [] nombre) {
         archivo.escribirDeCerroEnCSV(nombre);
     }
 
@@ -64,7 +78,7 @@ public class ServicioReaccion {
         }
     }
 
-    public int contarReaccionesConIdyNombre(int idP, String nombre){
+    private int contarReaccionesConIdyNombre(int idP, String nombre){
         int res=0;
         for (Reacciones reaccion: listaReacciones) {
             if(reaccion.getIdPublicacion()==idP && reaccion.getNombre().equals(nombre)){

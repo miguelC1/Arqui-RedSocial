@@ -1,24 +1,16 @@
-import backend.GestorDeArchivos;
-import backend.ServicioUsuario;
-import frontend.Reacion;
-import frontend.UI;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import static java.lang.System.*;
+import backend.ServicioPublicaciones;
+import backend.ServicioReacciones;
+import backend.ServicioUsuarios;
+import frontend.IU;
 
 public class Main {
     public static void main (String[] args){
+        ServicioPublicaciones servicioPublicaciones  = new ServicioPublicaciones();
+		ServicioReacciones servicioReacciones = new ServicioReacciones();
+    	ServicioUsuarios servicioUsuarios = new ServicioUsuarios();
+        IU iu = new IU(servicioPublicaciones, servicioReacciones, servicioUsuarios);
 
-        UI ui=new UI();
-        ui.iniciar();
-
-        /*for (int i=0; i<Reacion.values().length; i++) {
-            String re=Reacion.values()[i].toString();
-            System.out.println(re);
-        }*/
-
+        iu.iniciar();
 
     }
 }

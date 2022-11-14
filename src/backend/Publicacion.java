@@ -1,61 +1,25 @@
 package backend;
-
 import java.time.LocalDateTime;
 
 public class Publicacion {
     private int id;
     private int idUsuario;
     private String contenido;
-    private  LocalDateTime fecha;
-    public Publicacion(int idPublicacion, int idU, String contenido ){
+    private  String fecha;
+    public Publicacion(int idPublicacion, int idUsuario, String contenido, String fecha ){
         this.id=idPublicacion;
-        this.idUsuario=idU;
+        this.idUsuario=idUsuario;
         this.contenido=contenido;
-        this.fecha= LocalDateTime.now();
+        this.fecha=fecha;
     }
-    public Publicacion(){
-        this.fecha= LocalDateTime.now();
-    }
-
-    /*public Publicacion creacionObjetoActual(int id, int idUsuario, String contenido, LocalDateTime fecha){
-        Publicacion actual= new Publicacion();
-        actual.setId(id);
-        actual.setIdUsuario(idUsuario);
-        actual.setContenido(contenido);
-        actual.setFecha(fecha);
-        return actual;
-    }*/
-
-    public int getId() {
-        return id;
-    }
-
-
     public int getIdUsuario() {
         return idUsuario;
     }
-
-    public void setIdUsuario(int idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public void agregarId() {
-        this.id = getId();
-    }
-
     public String getContenido() {
         return contenido;
     }
-
-    public void setContenido(String contenido) {
-        this.contenido = contenido;
-    }
-
-    public LocalDateTime getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
-    }
 }
