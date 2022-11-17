@@ -1,4 +1,6 @@
 # Arqui-RedSocial
+ayuda
+https://www.freecodecamp.org/espanol/news/subir-a-github-lo-suficientemente-simple-para-poetas/
 
 #Ejecuta git clone https://github.com/nombreDeUsuario/repositorio.git en la terminal. Aquí, 
 nombrelDeUsuario y repositorio serán reemplazados por los valores proporcionados en el enlace copiado.
