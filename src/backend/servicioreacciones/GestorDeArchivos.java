@@ -1,9 +1,10 @@
-package backend;
+package backend.serviciopublicaciones;
 
 import com.sun.source.tree.BreakTree;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -27,11 +28,8 @@ public class GestorDeArchivos {
     }
     public void escribirDatosEnCSV(String contenido){
         try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre,true))) {
-            if(!existeDato(contenido)) {
-                //System.out.println("no existe");
-                escritor.printf(contenido + "\n");
-                escritor.close();
-            }
+            escritor.printf(contenido + "\n");
+            escritor.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -65,21 +63,21 @@ public class GestorDeArchivos {
         }
     }
 
-    private boolean existeDato(String dato){
-        File archivo = new File(nombre);
+    public int existeNombre(String nombre){
+        File archivo = new File(this.nombre);
         Scanner entrada = null;
         String linea;
-        boolean contiene = false;
+        int res = 0;
         try {
             entrada = new Scanner(archivo);
             while (entrada.hasNext()) {
                 linea = entrada.nextLine();
-                if (linea.equals(dato)) {
-                    contiene = true;
+                String [] data=linea.split(",");
+                if (data[1].equals(nombre)) {
+                    res = Integer.parseInt(data[0]);
                     break;
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -88,7 +86,33 @@ public class GestorDeArchivos {
                 entrada.close();
             }
         }
-        return contiene;
+        return res;
+    }
+
+    public int existeDato(String dato){
+        File archivo = new File(this.nombre);
+        Scanner entrada = null;
+        String linea;
+        int res = 0;
+        try {
+            entrada = new Scanner(archivo);
+            while (entrada.hasNext()) {
+                linea = entrada.nextLine();
+                String [] data=linea.split(",");
+                if (linea.equals(dato)) {
+                    res = Integer.parseInt(data[0]);
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (entrada != null) {
+                entrada.close();
+            }
+        }
+        return res;
     }
 
 }

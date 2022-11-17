@@ -17,9 +17,10 @@ public class ServicioPublicaciones {
         cargarDatosLista();
     }
 
-    public void agregarPublicacion(int idUsuario, String contenido) {
+    public int agregarPublicacion(int idUsuario, String contenido) {
         String[] pro = archivo.leerDatosCSV();
         this.fecha=""+LocalDateTime.now();
+        int res=0;
         if (pro[0].equals("")) {
             int id = 1;
             Publicacion actual = new Publicacion(id, idUsuario, contenido, fecha);
@@ -31,6 +32,7 @@ public class ServicioPublicaciones {
             listaPublicaciones.add(actual);
             archivo.escribirDatosEnCSV(id + "," + idUsuario + "," + "\""+contenido+"\"+" + "," + actual.getFecha());
         }
+        return res;
     }
 
     public Publicacion buscarPublicacion(int idPublicacion) {
@@ -89,8 +91,11 @@ public class ServicioPublicaciones {
     }
 
     private void agregarPublicacionDefecto() {
+
         String contenido="1,1,\"El Pique Macho y el arroz, no le va, no?\",2022-11-06T19:12:04.213293600";
-        archivo.escribirDatosEnCSV(contenido);
+        if(archivo.existeDato(contenido)==0) {
+            archivo.escribirDatosEnCSV(contenido);
+        }
     }
 
 }

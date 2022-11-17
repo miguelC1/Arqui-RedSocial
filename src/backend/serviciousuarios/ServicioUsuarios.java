@@ -16,19 +16,30 @@ public class ServicioUsuarios {
     }
 
     private void usuarioPorDefecto(){
-        archivo.escribirDatosEnCSV("1,Maria Jimenes");
+        int idActual=archivo.existeNombre("Maria Jimenes");
+        if(idActual==0){
+            archivo.escribirDatosEnCSV("1,Maria Jimenes");
+        }
     }
-    public void agregarUsuario(String nombre) {
+
+    public int agregarUsuario(String nombre) {
+        int res=archivo.existeNombre(nombre);
+        System.out.println("id encontrado "+res);
         String [] pro=archivo.leerDatosCSV();
+        int id=0;
         if (pro[0].equals("")){
-            int id=1;
+            id=1;
             archivo.escribirDatosEnCSV(id+","+nombre);
             listaDeUsuarios.add(new Usuario(id,nombre));
         }else {
-            int id=pro.length+1;
-            archivo.escribirDatosEnCSV(id+","+nombre);
-            listaDeUsuarios.add(new Usuario(id,nombre));
+            if(res==0){
+                id = pro.length+1;
+                archivo.escribirDatosEnCSV(id+","+nombre);
+                listaDeUsuarios.add(new Usuario(id,nombre));
+                res=id;
+            }
         }
+        return  res;
     }
 
     public void eliminarUsuario(String nombre) {
