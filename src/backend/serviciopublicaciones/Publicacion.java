@@ -1,4 +1,4 @@
-package backend;
+package backend.serviciopublicaciones;
 import java.time.LocalDateTime;
 
 public class Publicacion {

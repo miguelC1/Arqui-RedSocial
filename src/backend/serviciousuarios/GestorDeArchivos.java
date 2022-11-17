@@ -1,12 +1,10 @@
-package backend.serviciopublicaciones;
+package backend.serviciousuarios;
 
-import com.sun.source.tree.BreakTree;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 

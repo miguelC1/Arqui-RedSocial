@@ -1,4 +1,4 @@
-package backend;
+package backend.servicioreacciones;
 
 public class Reacciones {
     private Integer idPublicacion;

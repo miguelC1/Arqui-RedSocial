@@ -1,36 +1,60 @@
 package frontend;
 
-import backend.*;
+import backend.serviciopublicaciones.Publicacion;
+import backend.serviciopublicaciones.ServicioPublicaciones;
+import backend.servicioreacciones.Emocion;
+import backend.servicioreacciones.ServicioReacciones;
+import backend.serviciousuarios.ServicioUsuarios;
+import backend.serviciousuarios.Usuario;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 public class IU {
     Scanner sc;
-    ServicioUsuarios servicioUsuario;
-    ServicioReacciones servicioReaccion;
-    ServicioPublicaciones servicioPublicacion;
+    ServicioUsuarios servicioUsuarios;
+    ServicioReacciones servicioReacciones;
+    ServicioPublicaciones servicioPublicaciones;
     Usuario usuario;
     int idU;
     public IU(ServicioPublicaciones servicioPublicaciones, ServicioReacciones servicioReacciones, ServicioUsuarios servicioUsuarios) {
         sc=new Scanner(System.in);
-        servicioPublicacion=servicioPublicaciones;
-        servicioReaccion=servicioReacciones;
-        servicioUsuario=servicioUsuarios;
-        usuario=servicioUsuario.buscarUsuario(1);
+        this.servicioPublicaciones =servicioPublicaciones;
+        this.servicioReacciones =servicioReacciones;
+        this.servicioUsuarios =servicioUsuarios;
+        //usuario= this.servicioUsuarios.buscarUsuario(1);
         idU=1;
     }
 
 
 
     public  void iniciar(){
-        publicacionDefecto();
+        crearUsuario();
         menu();
     }
 
     public void crearUsuario(){
-        servicioUsuario.agregarUsuario(leerEntreada());
+        System.out.print("Nombre Usuario: ");
+        idU= servicioUsuarios.agregarUsuario(leerEntreada());
+        usuario= servicioUsuarios.buscarUsuario(idU);
     }
+
+    public void crearPublicacion (){
+        System.out.println("=========TEXTO PUBLICACION======");
+        System.out.println("Ingrese Contenido: ");
+        String texto=leerEntreada();
+        servicioPublicaciones.agregarPublicacion(idU,texto);
+        //nuevaP.setFecha("27/oct/2022");
+    }
+
+    public void cambiarUsuario(){
+        mostrarListaUsuarios();
+        System.out.println("ELEGIR UN USUARIO");
+        int n=sc.nextInt();
+        usuario= servicioUsuarios.buscarUsuario(n);
+        idU=n;
+    }
+
     public void opcionUsuario(){
         System.out.println("1) CREAR NUEVO USUARIO");
         System.out.println("2) CAMBIAR USUARIO");
@@ -40,65 +64,54 @@ public class IU {
             crearUsuario();
         }
         else {
-            mostrarUsuarios();
+            mostrarListaUsuarios();
             System.out.println("ELEGIR UN USUARIO");
             int n=sc.nextInt();
-            usuario=servicioUsuario.buscarUsuario(n);
+            usuario= servicioUsuarios.buscarUsuario(n);
             idU=n;
         }
     }
-    private void mostrarMuro(){
-        List<Integer>listaP=servicioPublicacion.listarPublicaciones();
-        System.out.println("mostarMuro"+ listaP.size());
-        for(int i=0; i< listaP.size(); i++){
-            System.out.println("(== "+(i+1)+" ==)");
-            Publicacion publicacion=servicioPublicacion.buscarPublicacion(listaP.get(i));
-            mostrarPublicidad(publicacion);
+    private void mostrarMuroPublicaciones(){
+        List<Integer>listaP= servicioPublicaciones.listarPublicaciones();
+        for(int i=listaP.size()-1; i>=0; i--){
+            System.out.println("(== PUBLICACION "+(i+1)+" ==)");
+            Publicacion publicacion= servicioPublicaciones.buscarPublicacion(listaP.get(i));
+            mostrarPublicacion(publicacion, listaP.get(i));
         }
     }
 
-    public void crearPublicacion (){
-        System.out.println("=========TEXTO PUBLICACION======");
-        System.out.println("Ingrese Contenido: ");
-        String texto=leerEntreada();
-        servicioPublicacion.agregarPublicacion(idU,texto);
-        //nuevaP.setFecha("27/oct/2022");
-    }
-    public void mostrarUsuarios(){
-        List<Integer>listaU= servicioUsuario.listarUsuarios();
+
+    public void mostrarListaUsuarios(){
+        List<Integer>listaU= servicioUsuarios.listarUsuarios();
 
         for(int i=0; i< listaU.size(); i++){
-            System.out.println(listaU.get(i)+") "+ servicioUsuario.buscarUsuario(listaU.get(i)));
+            System.out.println(listaU.get(i)+") "+ servicioUsuarios.buscarUsuario(listaU.get(i)).getNombre());
         }
         System.out.println();
     }
 
-    private void mostrarPublicidad (Publicacion publicacion){
+    private void mostrarPublicacion(Publicacion publicacion, int idP){
         System.out.println ("*********************************RED SOCIAL***************************************************");
         System.out.println ("**********************************************************************************************");
-        mostrar(usuario.getNombre());
-        DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy  hh:mm a");
-        LocalDateTime fecha= LocalDateTime.parse(publicacion.getFecha());
-        String fechaString = FOMATTER.format(fecha);
-        mostrar(fechaString);
+        String cad=servicioUsuarios.buscarUsuario(publicacion.getIdUsuario()).getNombre();
+        mostrarLaterales(cad);
+        //DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        //LocalDateTime fecha= LocalDateTime.parse(publicacion.getFecha());
+        //String fechaString = FOMATTER.format(fecha);
+        mostrarLaterales(publicacion.getFecha());
         System.out.println ("**==========================================================================================**");
-        mostrar (publicacion.getContenido());
+        mostrarLaterales(publicacion.getContenido());
         System.out.println ("**==========================================================================================**");
-        mostrarReacciones();
-        linea();
+        mostrarReacciones(idP);
+        lineaContorno();
         System.out.println();
 
     }
     public void mostrarReacciones(){
-        Emocion emocion= Emocion.Like;
-        int i=1;
-        for(Emocion e: Emocion.values()){
-            System.out.print(i+")"+e.toString()+"  ");
-            i++;
-        }
+        System.out.println("1)Like  2)Love  3)Sad  4)Happy  5)Mad  6)Surprise  7)Care  8)Indifferent  9)Explain ");
         System.out.println();
     }
-    public static void linea(){
+    public static void lineaContorno(){
         System.out.println ("**********************************************************************************************");
     }
     private void listaE(String [] expr){
@@ -120,7 +133,7 @@ public class IU {
         }
 
     }
-    private void mostrar(String texto){
+    private void mostrarLaterales(String texto){
         System.out.print ("** "+texto);
         for (int i=0; i<89-texto.length(); i++){
             System.out.print (" ");
@@ -133,21 +146,22 @@ public class IU {
         mostrarMenuIntereses();
         while ((caso=sc.nextInt())!=0){
             if(caso==1){
-                mostrarMuro();
+                mostrarMuroPublicaciones();
             }
             else if (caso==2){
                 crearPublicacion();
-                mostrarMuro();
+                mostrarMuroPublicaciones();
             }else if(caso==3){
                 reaccionarPublicacion();
             }else if(caso==4){
-                opcionUsuario();
+                crearUsuario();
+                //opcionUsuario();
             }else if(caso==5) {
-                mostrarPublicaciones();
+                cambiarUsuario();
             }else if(caso==6){
-                mostrarUsuarios();
-            }else if(caso==7){
-                mostrarCSVReaciones();
+                mostrarFormaCSVPublicaciones();
+            } else if(caso==6){
+                mostrarListaUsuarios();
             }
             mostrarMenuIntereses();
         }
@@ -161,42 +175,41 @@ public class IU {
         System.out.println(nR);
         nR=nR-1;
         //String reaccionar=Emocion.values()[nR].toString();
-        System.out.println("numero REaccion"+nR);
-        servicioReaccion.agregarReacciones(nP,idU,Emocion.values()[nR]);
+        servicioReacciones.agregarReacciones(nP,idU,Emocion.values()[nR]);
+        mostrarMuroPublicaciones();
     }
     public void mostrarMenuIntereses(){
         System.out.println("MENU de OPERACIONES");
-        System.out.println("1) Ver Publicidad");
-        System.out.println("2) Crear Publicidad");
-        System.out.println("3) Reaccionar Publicidad");
-        System.out.println("4) cambiar Usuario");
-        /*System.out.println("5) listar Publicaiones");
-        System.out.println("6) listar Usuario");
-        System.out.println("7) listar Reaciones");*/
+        System.out.println("1) Ver Publicaciones");
+        System.out.println("2) Crear Nueva Publicacion");
+        System.out.println("3) Reaccionar Publicacion");
+        System.out.println("4) Cambiar Usuario");
+        //System.out.println("5) cambiar Usuario");
     }
 
-    public void mostrarPublicaciones(){
-        List<Integer> lista=servicioPublicacion.listarPublicaciones();
+    public void mostrarFormaCSVPublicaciones(){
+        List<Integer> lista= servicioPublicaciones.listarPublicaciones();
         for (int i=0; i< lista.size(); i++){
-            Publicacion act=servicioPublicacion.buscarPublicacion(lista.get(i));
+            Publicacion act= servicioPublicaciones.buscarPublicacion(lista.get(i));
             System.out.println(" = "+act.getIdUsuario()+" = "+ act.getContenido()+" = "+ act.getFecha());
         }
     }
-    public void mostrarCSVReaciones(){
-        List<Reacciones> lista=servicioReaccion.listarReacciones();
-        for (int i=0; i< lista.size(); i++){
-            System.out.println(lista.get(i).getIdPublicacion()+" "+ lista.get(i).getNombre()+" "+lista.get(i).getIdUsuario());
+   
+
+    public void mostrarReacciones(int idP){
+        Emocion emocion= Emocion.Like;
+        int i=1;
+        Map<Emocion,Integer>cantidad= servicioReacciones.listarResumenReacciones(idP);
+        for(Emocion e: Emocion.values()){
+            Integer nu=cantidad.get(e);
+            if(nu!=null && nu!=0){
+                System.out.print(e.toString()+"("+nu+")");
+                i++;
+            }
         }
+        System.out.println();
     }
 
-    private void publicacionDefecto(){
-       servicioUsuario.agregarUsuario("Maria Jimenes");
-
-      // servicioPublicacion.agregarPublicacion(1,"El Pique Macho y el arroz, no le va, no? ");
-
-        //p1.setFecha(LocalDateTime.parse("2022-11-06T19:12:04.213293600"));
-        //servicioPublicacion.agregarDatosCSV(p1.getId(),p1.getIdUsuario(), p1.getContenido(),p1.getFecha());
-    }
 
 
 }

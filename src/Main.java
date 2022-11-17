@@ -1,6 +1,6 @@
-import backend.ServicioPublicaciones;
-import backend.ServicioReacciones;
-import backend.ServicioUsuarios;
+import backend.serviciopublicaciones.ServicioPublicaciones;
+import backend.servicioreacciones.ServicioReacciones;
+import backend.serviciousuarios.ServicioUsuarios;
 import frontend.IU;
 
 public class Main {

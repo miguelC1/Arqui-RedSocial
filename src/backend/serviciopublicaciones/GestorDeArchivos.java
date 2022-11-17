@@ -7,10 +7,10 @@ import java.nio.file.Files;
 import java.util.Scanner;
 
 
-public class GestorDeArchivoss {
+public class GestorDeArchivos {
     private String nombre;
 
-    public GestorDeArchivoss(String nombre){
+    public GestorDeArchivos(String nombre){
         this.nombre=nombre+".csv";
         crearArchivo(this.nombre);
     }

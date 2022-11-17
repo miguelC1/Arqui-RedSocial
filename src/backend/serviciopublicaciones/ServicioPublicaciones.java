@@ -1,4 +1,5 @@
-package backend;
+package backend.serviciopublicaciones;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class ServicioPublicaciones {
         fecha="";
         listaPublicaciones = new ArrayList<>();
         archivo = new GestorDeArchivos("Publicaciones");
-        agregarPublicacionDefecto();
+        //agregarPublicacionDefecto();
         cargarDatosLista();
     }
 
@@ -25,12 +26,14 @@ public class ServicioPublicaciones {
             int id = 1;
             Publicacion actual = new Publicacion(id, idUsuario, contenido, fecha);
             listaPublicaciones.add(actual);
-            archivo.escribirDatosEnCSV(id + "," + idUsuario + "," + "\""+contenido+"\"+" + "," + actual.getFecha());
+            archivo.escribirDatosEnCSV(id + "," + idUsuario + "," + "\""+contenido+"\"" + "," + actual.getFecha());
+            res=id;
         } else {
             int id = pro.length + 1;
             Publicacion actual = new Publicacion(id, idUsuario, contenido, fecha);
             listaPublicaciones.add(actual);
-            archivo.escribirDatosEnCSV(id + "," + idUsuario + "," + "\""+contenido+"\"+" + "," + actual.getFecha());
+            archivo.escribirDatosEnCSV(id + "," + idUsuario + "," + "\""+contenido+"\"" + "," + actual.getFecha());
+            res=id;
         }
         return res;
     }
@@ -49,10 +52,12 @@ public class ServicioPublicaciones {
     public List<Integer> listarPublicaciones() {
         List<Integer>lista=new ArrayList<>();
         String []datos=archivo.leerDatosCSV();
-        for (String dato: datos){
-            String [] cad=dato.split(",");
-            lista.add(Integer.parseInt(cad[0]));
+        if(!datos[0].equals("")) {
+            for (String dato : datos) {
+                String[] cad = dato.split(",");
+                lista.add(Integer.parseInt(cad[0]));
 
+            }
         }
         return lista;
     }

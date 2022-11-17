@@ -1,4 +1,6 @@
-package backend;
+package backend.serviciousuarios;
+
+import backend.serviciousuarios.GestorDeArchivos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,7 @@ public class ServicioUsuarios {
     public ServicioUsuarios(){
         archivo= new GestorDeArchivos("Usuarios");
         listaDeUsuarios = new ArrayList<>();
-        usuarioPorDefecto();
+        //usuarioPorDefecto();
         cargarDatosLista();
         mostraLista();
     }
@@ -24,13 +26,13 @@ public class ServicioUsuarios {
 
     public int agregarUsuario(String nombre) {
         int res=archivo.existeNombre(nombre);
-        System.out.println("id encontrado "+res);
         String [] pro=archivo.leerDatosCSV();
         int id=0;
         if (pro[0].equals("")){
             id=1;
             archivo.escribirDatosEnCSV(id+","+nombre);
             listaDeUsuarios.add(new Usuario(id,nombre));
+            res=id;
         }else {
             if(res==0){
                 id = pro.length+1;
@@ -66,6 +68,7 @@ public class ServicioUsuarios {
     public List<Integer> listarUsuarios() {
         List<Integer>lista=new ArrayList<>();
         String []datos=archivo.leerDatosCSV();
+        if(!datos[0].equals(""))
         for (String dato: datos){
             String [] cad=dato.split(",");
             lista.add(Integer.parseInt(cad[0]));
@@ -94,40 +97,4 @@ public class ServicioUsuarios {
         }
 
     }
-
-
-/*
-    public void agregarDatosCSV(String nombre){
-        String [] pro=archivo.leerDatosCSV();
-        if (pro[0].equals("")){
-            int id=1;
-            archivo.escribirDatosEnCSV(id+","+nombre);
-        }else {
-            int id=pro.length+1;
-            archivo.escribirDatosEnCSV(id+","+nombre);
-        }
-    }
-
-    public String buscarIdUsuario(int idUsuario){
-        String res=null;
-        String []datos=archivo.leerDatosCSV();
-        for (String dato: datos){
-            String [] cad=dato.split(",");
-            if (cad[0].equals(""+idUsuario)){
-                res=cad[1];
-            }
-        }
-        return res;
-    }
-    public List<Usuario> obtenerTodosUsuarios(){
-        Usuario act=new Usuario();
-        List<Usuario> lista=new ArrayList<>();
-        String []datos=archivo.leerDatosCSV();
-        for (String dato: datos){
-            String [] cad=dato.split(",");
-            act=act.crearObjetoActual(Integer.parseInt(cad[0]), cad[1]);
-            lista.add(act);
-        }
-        return lista;
-    }*/
 }
