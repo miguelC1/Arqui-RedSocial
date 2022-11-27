@@ -16,7 +16,7 @@ public class ServicioReacciones {
         cargarDatosLista();
     }
 
-    public void agregarReacciones(int idPublicacion, int idUsuario, Emocion reaccion) {
+    public void agregarReaccion(int idPublicacion, int idUsuario, Emocion reaccion) {
         String [] pro=archivo.leerDatosCSV();
         String r= reaccion.name();
         if (pro[0].equals("")){
@@ -32,10 +32,8 @@ public class ServicioReacciones {
                 archivo.escribirDatosEnCSV(idPublicacion+","+reaccion+","+idUsuario);
                 listaReacciones.add(new Reacciones(idPublicacion,r,idUsuario));
             }
-
         }
     }
-
 
     public Map<Emocion,Integer> listarResumenReacciones(int idPublicacion) {
         Map<Emocion,Integer> map= new HashMap<>();

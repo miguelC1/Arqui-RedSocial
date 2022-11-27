@@ -29,6 +29,7 @@ public class IU {
 
 
     public  void iniciar(){
+        System.out.println("INICIAR SESION");
         crearUsuario();
         menu();
     }
@@ -37,6 +38,7 @@ public class IU {
         System.out.print("Nombre Usuario: ");
         idU= servicioUsuarios.agregarUsuario(leerEntreada());
         usuario= servicioUsuarios.buscarUsuario(idU);
+        mostrarMuroPublicaciones();
     }
 
     public void crearPublicacion (){
@@ -92,7 +94,7 @@ public class IU {
 
     private void mostrarPublicacion(Publicacion publicacion, int idP){
         System.out.println ("*********************************RED SOCIAL***************************************************");
-        System.out.println ("**********************************************************************************************");
+        lineaContorno();
         String cad=servicioUsuarios.buscarUsuario(publicacion.getIdUsuario()).getNombre();
         mostrarLaterales(cad);
         //DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -146,16 +148,13 @@ public class IU {
         mostrarMenuIntereses();
         while ((caso=sc.nextInt())!=0){
             if(caso==1){
-                mostrarMuroPublicaciones();
-            }
-            else if (caso==2){
                 crearPublicacion();
                 mostrarMuroPublicaciones();
-            }else if(caso==3){
+            }else if(caso==2){
                 reaccionarPublicacion();
-            }else if(caso==4){
+                mostrarMuroPublicaciones();
+            }else if(caso==3){
                 crearUsuario();
-                //opcionUsuario();
             }else if(caso==5) {
                 cambiarUsuario();
             }else if(caso==6){
@@ -175,16 +174,16 @@ public class IU {
         System.out.println(nR);
         nR=nR-1;
         //String reaccionar=Emocion.values()[nR].toString();
-        servicioReacciones.agregarReacciones(nP,idU,Emocion.values()[nR]);
-        mostrarMuroPublicaciones();
+        servicioReacciones.agregarReaccion(nP,idU,Emocion.values()[nR]);
+
     }
     public void mostrarMenuIntereses(){
-        System.out.println("MENU de OPERACIONES");
-        System.out.println("1) Ver Publicaciones");
-        System.out.println("2) Crear Nueva Publicacion");
-        System.out.println("3) Reaccionar Publicacion");
-        System.out.println("4) Cambiar Usuario");
-        //System.out.println("5) cambiar Usuario");
+        System.out.println("//// MENU de OPERACIONES /////");
+       // System.out.println("1) Ver Publicaciones");
+        System.out.println("1) Crear Nueva Publicacion");
+        System.out.println("2) Reaccionar Publicacion");
+        System.out.println("3) Cambiar Usuario");
+        System.out.println("0) Cerrar Sesion");
     }
 
     public void mostrarFormaCSVPublicaciones(){

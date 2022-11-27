@@ -1,6 +1,8 @@
 package backend.serviciopublicaciones;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,10 @@ public class ServicioPublicaciones {
 
     public int agregarPublicacion(int idUsuario, String contenido) {
         String[] pro = archivo.leerDatosCSV();
-        this.fecha=""+LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        this.fecha=""+LocalDateTime.now().format(formatter);
+
+        System.out.println(fecha);
         int res=0;
         if (pro[0].equals("")) {
             int id = 1;
