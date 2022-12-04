@@ -7,8 +7,6 @@ import backend.servicioreacciones.ServicioReacciones;
 import backend.serviciousuarios.ServicioUsuarios;
 import backend.serviciousuarios.Usuario;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 public class IU {
     Scanner sc;
@@ -22,29 +20,30 @@ public class IU {
         this.servicioPublicaciones =servicioPublicaciones;
         this.servicioReacciones =servicioReacciones;
         this.servicioUsuarios =servicioUsuarios;
-        //usuario= this.servicioUsuarios.buscarUsuario(1);
-        idU=1;
     }
-
-
 
     public  void iniciar(){
         System.out.println("INICIAR SESION");
         crearUsuario();
-        menu();
     }
 
-    public void crearUsuario(){
+    private void crearUsuario(){
         System.out.print("Nombre Usuario: ");
-        idU= servicioUsuarios.agregarUsuario(leerEntreada());
+        idU= servicioUsuarios.agregarUsuario(leerEntreadaTeclado());
         usuario= servicioUsuarios.buscarUsuario(idU);
+        if(usuario.esUsuario()){
+            menuUsuario();
+        }else{
+
+            menuCandidato();
+        }
         mostrarMuroPublicaciones();
     }
 
     public void crearPublicacion (){
         System.out.println("=========TEXTO PUBLICACION======");
         System.out.println("Ingrese Contenido: ");
-        String texto=leerEntreada();
+        String texto= leerEntreadaTeclado();
         servicioPublicaciones.agregarPublicacion(idU,texto);
         //nuevaP.setFecha("27/oct/2022");
     }
@@ -75,9 +74,13 @@ public class IU {
     }
     private void mostrarMuroPublicaciones(){
         List<Integer>listaP= servicioPublicaciones.listarPublicaciones();
-        for(int i=listaP.size()-1; i>=0; i--){
-            System.out.println("(== PUBLICACION "+(i+1)+" ==)");
-            Publicacion publicacion= servicioPublicaciones.buscarPublicacion(listaP.get(i));
+        Publicacion publicacion=null;
+        for(int i=0; i<listaP.size(); i++){
+            System.out.println("(== PUBLICACION "+listaP.get(i)+" ==)");
+            publicacion= servicioPublicaciones.buscarPublicacion(listaP.get(i));
+            if(verificarCantidadReaccione(listaP.get(i))){
+                servicioUsuarios.cambiarAUsuario(publicacion.getIdUsuario());
+            }
             mostrarPublicacion(publicacion, listaP.get(i));
         }
     }
@@ -85,7 +88,6 @@ public class IU {
 
     public void mostrarListaUsuarios(){
         List<Integer>listaU= servicioUsuarios.listarUsuarios();
-
         for(int i=0; i< listaU.size(); i++){
             System.out.println(listaU.get(i)+") "+ servicioUsuarios.buscarUsuario(listaU.get(i)).getNombre());
         }
@@ -93,19 +95,17 @@ public class IU {
     }
 
     private void mostrarPublicacion(Publicacion publicacion, int idP){
+        //System.out.println ("______________________________________________________________________________________________");
         System.out.println ("*********************************RED SOCIAL***************************************************");
-        lineaContorno();
+        System.out.println ("**********************************************************************************************");
         String cad=servicioUsuarios.buscarUsuario(publicacion.getIdUsuario()).getNombre();
         mostrarLaterales(cad);
-        //DateTimeFormatter FOMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        //LocalDateTime fecha= LocalDateTime.parse(publicacion.getFecha());
-        //String fechaString = FOMATTER.format(fecha);
         mostrarLaterales(publicacion.getFecha());
         System.out.println ("**==========================================================================================**");
         mostrarLaterales(publicacion.getContenido());
         System.out.println ("**==========================================================================================**");
         mostrarReacciones(idP);
-        lineaContorno();
+        System.out.println ("**********************************************************************************************");
         System.out.println();
 
     }
@@ -113,18 +113,8 @@ public class IU {
         System.out.println("1)Like  2)Love  3)Sad  4)Happy  5)Mad  6)Surprise  7)Care  8)Indifferent  9)Explain ");
         System.out.println();
     }
-    public static void lineaContorno(){
-        System.out.println ("**********************************************************************************************");
-    }
-    private void listaE(String [] expr){
-        System.out.print ("**");
-        for (int i=0; i<expr.length; i++){
-            System.out.print (""+expr[i]+" ");
-        }
-        System.out.print ("**");
-        System.out.println ("");
-    }
-    private String leerEntreada(){
+
+    private String leerEntreadaTeclado(){
         String cad="";
         cad=sc.nextLine();
         if(!cad.equals("")){
@@ -133,19 +123,20 @@ public class IU {
         else {
             return sc.nextLine();
         }
-
     }
+
     private void mostrarLaterales(String texto){
-        System.out.print ("** "+texto);
+        System.out.print ("## "+texto);
         for (int i=0; i<89-texto.length(); i++){
             System.out.print (" ");
         }
-        System.out.println("**");
+        System.out.println("##");
     }
 
-    public void menu(){
+    public void menuUsuario(){
         int caso;
-        mostrarMenuIntereses();
+        mostrarMuroPublicaciones();
+        TextosMenu();
         while ((caso=sc.nextInt())!=0){
             if(caso==1){
                 crearPublicacion();
@@ -162,7 +153,26 @@ public class IU {
             } else if(caso==6){
                 mostrarListaUsuarios();
             }
-            mostrarMenuIntereses();
+            TextosMenu();
+        }
+    }
+
+    public void menuCandidato(){
+        int caso;
+        mostrarMuroPublicaciones();
+        TextosMenuCandidato();
+        while ((caso=sc.nextInt())!=0){
+            if(caso==1){
+                crearPublicacion();
+                mostrarMuroPublicaciones();
+            }else if(caso==2){
+                reaccionarPublicacion();
+                //usuarioInput.reaccionar();
+                mostrarMuroPublicaciones();
+            }else if(caso==3){
+                crearUsuario();
+            }
+            TextosMenuCandidato();
         }
     }
     private void reaccionarPublicacion(){
@@ -177,13 +187,23 @@ public class IU {
         servicioReacciones.agregarReaccion(nP,idU,Emocion.values()[nR]);
 
     }
-    public void mostrarMenuIntereses(){
-        System.out.println("//// MENU de OPERACIONES /////");
-       // System.out.println("1) Ver Publicaciones");
-        System.out.println("1) Crear Nueva Publicacion");
-        System.out.println("2) Reaccionar Publicacion");
-        System.out.println("3) Cambiar Usuario");
-        System.out.println("0) Cerrar Sesion");
+    public void TextosMenu(){
+        System.out.println("///// MENU DE OPERACIONES DE USUARIO/////");
+        System.out.println("// 1) Crear Nueva Publicacion          //");
+        System.out.println("// 2) Reaccionar Publicacion           //");
+        System.out.println("// 3) Cambiar Usuario                  //");
+        System.out.println("// 0) Cerrar Sesion                    //");
+        System.out.println("/////////////////////////////////////////");
+    }
+    public void TextosMenuCandidato(){
+        System.out.println("///// MENU DE OPERACIONES DE CANDIDATO/////");
+        if(!verificarRealizoPublicacion()){
+            System.out.println("// 1) Crear Nueva Publicacion          //");
+        }
+        System.out.println("// 2) Reaccionar Publicacion           //");
+        System.out.println("// 3) Cambiar Usuario                  //");
+        System.out.println("// 0) Cerrar Sesion                    //");
+        System.out.println("/////////////////////////////////////////");
     }
 
     public void mostrarFormaCSVPublicaciones(){
@@ -209,6 +229,30 @@ public class IU {
         System.out.println();
     }
 
+     private boolean verificarRealizoPublicacion(){
+        boolean res=false;
+        List<Integer> lista= servicioPublicaciones.listarPublicaciones();
+        for(int i=0; i<lista.size(); i++){
+            Publicacion publicacion =servicioPublicaciones.buscarPublicacion(lista.get(i));
+            if(publicacion.getIdUsuario()==idU){
+                res=true;
+            }
+        }
+        return res;
+     }
+    private boolean verificarCantidadReaccione(int idP){
+        boolean res=false;
+        int cantidad=0;
+        Map<Emocion,Integer> map= servicioReacciones.listarResumenReacciones(idP);
+        for (Emocion clave:map.keySet()) {
+            int valor = map.get(clave);
+            cantidad=cantidad+valor;
+        }
+        if(cantidad>2){
+            res=true;
+        }
+        return res;
+    }
 
 
 }

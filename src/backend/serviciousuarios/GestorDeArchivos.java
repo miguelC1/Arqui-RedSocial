@@ -86,6 +86,32 @@ public class GestorDeArchivos {
         }
         return res;
     }
+    public boolean esUsuario (String nombre){
+        File archivo = new File(this.nombre);
+        Scanner entrada = null;
+        String linea;
+        boolean res = false;
+        try {
+            entrada = new Scanner(archivo);
+            while (entrada.hasNext()) {
+                linea = entrada.nextLine();
+                String [] data=linea.split(",");
+                if (data[1].equals(nombre)) {
+                    if(data[2].equals(TipoUsuario.USUARIO.name()))
+                    res = true;
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (entrada != null) {
+                entrada.close();
+            }
+        }
+        return res;
+    }
 
     public int existeDato(String dato){
         File archivo = new File(this.nombre);

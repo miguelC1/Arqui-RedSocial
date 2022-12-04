@@ -113,4 +113,10 @@ public class GestorDeArchivos {
         return res;
     }
 
+    public boolean tieneRaccion(int idU){
+        boolean res= false;
+
+        return  res;
+    }
+
 }

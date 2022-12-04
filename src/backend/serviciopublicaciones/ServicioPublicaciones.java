@@ -1,10 +1,12 @@
 package backend.serviciopublicaciones;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class ServicioPublicaciones {
 
@@ -45,9 +47,12 @@ public class ServicioPublicaciones {
 
     public Publicacion buscarPublicacion(int idPublicacion) {
         Publicacion res = null;
-        for (int i = 0; i < listarPublicaciones().size(); i++) {
-            int idP=listarPublicaciones().get(i);
+        List<Integer> lista=listarPublicaciones();
+        Collections.reverse(lista);
+        for (int i = 0; i < lista.size(); i++) {
+            int idP=lista.get(i);
             if (idP==idPublicacion) {
+                //System.out.println(idP+" buscando"+idPublicacion+" ===> "+listaPublicaciones.get(i).getContenido());
                 res = listaPublicaciones.get(i);
             }
         }
@@ -61,14 +66,15 @@ public class ServicioPublicaciones {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 lista.add(Integer.parseInt(cad[0]));
-
             }
         }
+        Collections.reverse(lista);
+        //Collections.reverse(listaPublicaciones);
         return lista;
     }
 
 
-    public void actualizarDatos(String[] nombre) {
+    private void actualizarDatos(String[] nombre) {
         archivo.escribirDeCerroEnCSV(nombre);
     }
 

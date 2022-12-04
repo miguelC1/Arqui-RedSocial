@@ -1,5 +1,4 @@
 package backend.servicioreacciones;
-import backend.servicioreacciones.GestorDeArchivos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,7 @@ public class ServicioReacciones {
             if(verifivarReaccionUsuario(idPublicacion,idUsuario)){
                 eliminarReacccion(idPublicacion, idUsuario);
                 listaReacciones.add(new Reacciones(idPublicacion,r,idUsuario));
-                actualizarDatos(converiEnCadena());
+                actualizarDatos(convertirEnCadena());
             }
             else{
                 archivo.escribirDatosEnCSV(idPublicacion+","+reaccion+","+idUsuario);
@@ -42,10 +41,20 @@ public class ServicioReacciones {
             Emocion actual=Emocion.values()[i];
             map.put(actual,cantidad);
         }
-
         return map;
     }
 
+    /*public boolean tieneMasDeUnaReaccion(int idUsuario) {
+        boolean  res=false;
+        int contar=0;
+        for (Reacciones reaccion: listaReacciones) {
+            if(reaccion.getIdUsuario()==idUsuario){
+                res=true;
+               contar++;
+            }
+        }
+        return res;
+    }*/
 
     private void eliminarReacccion(int idP, int idU) {
         for (int i=0; i< listaReacciones.size(); i++){
@@ -55,11 +64,6 @@ public class ServicioReacciones {
             }
         }
 
-    }
-
-
-    private List<Reacciones> listarReacciones() {
-        return listaReacciones;
     }
 
     private void actualizarDatos(String [] nombre) {
@@ -97,7 +101,7 @@ public class ServicioReacciones {
         }
         return res;
     }
-    private String [] converiEnCadena(){
+    private String [] convertirEnCadena(){
         String [] res=new String[listaReacciones.size()];
         int i=0;
         for (Reacciones reaccion: listaReacciones) {

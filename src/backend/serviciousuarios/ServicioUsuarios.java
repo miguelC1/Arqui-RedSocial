@@ -1,6 +1,5 @@
 package backend.serviciousuarios;
 
-import backend.serviciousuarios.GestorDeArchivos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +11,8 @@ public class ServicioUsuarios {
     public ServicioUsuarios(){
         archivo= new GestorDeArchivos("Usuarios");
         listaDeUsuarios = new ArrayList<>();
-        //usuarioPorDefecto();
         cargarDatosLista();
-        mostraLista();
+        //mostraLista();
     }
 
     private void usuarioPorDefecto(){
@@ -30,13 +28,13 @@ public class ServicioUsuarios {
         int id=0;
         if (pro[0].equals("")){
             id=1;
-            archivo.escribirDatosEnCSV(id+","+nombre);
+            archivo.escribirDatosEnCSV(id+","+nombre+","+TipoUsuario.CANDIDATO.name());
             listaDeUsuarios.add(new Usuario(id,nombre));
             res=id;
         }else {
             if(res==0){
                 id = pro.length+1;
-                archivo.escribirDatosEnCSV(id+","+nombre);
+                archivo.escribirDatosEnCSV(id+","+nombre+","+ TipoUsuario.CANDIDATO.name());
                 listaDeUsuarios.add(new Usuario(id,nombre));
                 res=id;
             }
@@ -51,7 +49,7 @@ public class ServicioUsuarios {
                 listaDeUsuarios.remove(i);
             }
         }
-
+        actualizarDatos(converiEnCadena());
     }
 
     public Usuario buscarUsuario(int id) {
@@ -59,7 +57,7 @@ public class ServicioUsuarios {
         for (int i=0; i<listarUsuarios().size(); i++){
             int idU= listarUsuarios().get(i);
             if(idU==id){
-                usuario=new Usuario(id, listaDeUsuarios.get(i).getNombre());
+                usuario=listaDeUsuarios.get(i);
             }
         }
         return usuario;
@@ -76,25 +74,56 @@ public class ServicioUsuarios {
         }
         return lista;
     }
-
-    public void actualizarDatos(String [] nombre) {
-        archivo.escribirDeCerroEnCSV(nombre);
+    public void cambiarAUsuario(int id) {
+        Usuario usuario=buscarUsuario(id);
+        for(int i=0; i< listaDeUsuarios.size(); i++){
+            if(listaDeUsuarios.get(i).getNombre().equals(usuario.getNombre())){
+                usuario.cambiarAUsuario();
+                listaDeUsuarios.set(i,usuario);
+            }
+        }
+        actualizarDatos(converiEnCadena());
     }
 
+
+    private void actualizarDatos(String [] nombre) {
+        archivo.escribirDeCerroEnCSV(nombre);
+    }
     private void cargarDatosLista() {
         String [] datos=archivo.leerDatosCSV();
         if(!datos[0].equals("")) {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 int idA = Integer.parseInt(cad[0]);
-                listaDeUsuarios.add(new Usuario(idA, cad[1]));
+                Usuario nuevo;
+                if(TipoUsuario.USUARIO.name().equals(cad[2])){
+                    nuevo=new Usuario(idA, cad[1]);
+                    nuevo.cambiarAUsuario();
+                    listaDeUsuarios.add(nuevo);
+                }
+                else{
+                    listaDeUsuarios.add(new Usuario(idA, cad[1]));
+                }
+
             }
         }
     }
-    private void mostraLista() {
-        for (Usuario dato : listaDeUsuarios) {
-            // System.out.println("son  "+dato.getId()+" "+dato.getNombre());
-        }
+    private String [] converiEnCadena(){
+        String [] res=new String[listaDeUsuarios.size()];
+        List<Integer>listaIdUSU=listarUsuarios();
+        int i=0;
 
+        for (Usuario usuario: listaDeUsuarios) {
+            String cad="";
+            if(usuario.esUsuario()){
+                cad=listaIdUSU.get(i)+","+usuario.getNombre()+","+TipoUsuario.USUARIO.name();
+            }else{
+                cad=listaIdUSU.get(i)+","+usuario.getNombre()+","+TipoUsuario.CANDIDATO.name();
+            }
+            res[i]=cad;
+            i++;
+        }
+        return res;
     }
+
 }
