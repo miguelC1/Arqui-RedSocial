@@ -1,19 +1,21 @@
-package backend.serviciopublicaciones;
+package backend.servicioreacciones;
 
-import com.sun.source.tree.BreakTree;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.Scanner;
 
 
-public class GestorDeArchivos {
+public class GestorDeArchivoReaccion {
     private String nombre;
 
-    public GestorDeArchivos(String nombre){
+    public GestorDeArchivoReaccion(String nombre){
         this.nombre=nombre+".csv";
         crearArchivo(this.nombre);
     }
+
     private void crearArchivo(String nombre){
         File archivo = new File(nombre);
         try {
@@ -23,6 +25,7 @@ public class GestorDeArchivos {
             throw new RuntimeException(e);
         }
     }
+
     public void escribirDatosEnCSV(String contenido){
         try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre,true))) {
             escritor.printf(contenido + "\n");
@@ -31,6 +34,7 @@ public class GestorDeArchivos {
             throw new RuntimeException(e);
         }
     }
+
     public void escribirDeCerroEnCSV(String [] contenido){
         try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre))) {
             for (String fila: contenido){
@@ -41,11 +45,22 @@ public class GestorDeArchivos {
             throw new RuntimeException(e);
         }
     }
+
     public String[] leerDatosCSV(){
-        String cont = readFile(nombre);
-        //System.out.println(""+cont);
-        return cont == null ? null : cont.split("\\r?\\n");
+        String [] res=leerDatos();
+        if(res[0].equals("")){
+            res=new String[0] ;
+        }
+        return res;
     }
+
+    private String[] leerDatos(){
+        String cont = readFile(nombre);
+
+        return cont == null ? null : cont.split("\\r?\\n");
+
+    }
+
     private static String readFile(String filePath) {
         File file = new File(filePath);
         if(!file.isFile() || file.isDirectory()) {
@@ -109,6 +124,12 @@ public class GestorDeArchivos {
             }
         }
         return res;
+    }
+
+    public boolean tieneRaccion(int idU){
+        boolean res= false;
+
+        return  res;
     }
 
 }

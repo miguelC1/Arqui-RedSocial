@@ -1,11 +1,11 @@
 package backend.servicioreacciones;
 
-public class Reacciones {
+public class Reaccion {
     private Integer idPublicacion;
     private String nombre;
     private  Integer idUsuario;
 
-    public Reacciones(int idP, String nombre, int idU){
+    public Reaccion(int idP, String nombre, int idU){
         idPublicacion =idP;
         this.nombre=nombre;
         idUsuario =idU;

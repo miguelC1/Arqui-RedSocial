@@ -1,3 +1,4 @@
+import backend.serviciopublicaciones.GestorDeArchivoPublicacion;
 import backend.serviciopublicaciones.ServicioPublicaciones;
 import backend.servicioreacciones.ServicioReacciones;
 import backend.serviciousuarios.ServicioUsuarios;
@@ -11,6 +12,5 @@ public class Main {
         IU iu = new IU(servicioPublicaciones, servicioReacciones, servicioUsuarios);
 
         iu.iniciar();
-
     }
 }

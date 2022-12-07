@@ -1,4 +1,4 @@
-package backend.servicioreacciones;
+package backend.serviciousuarios;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -8,10 +8,10 @@ import java.nio.file.Files;
 import java.util.Scanner;
 
 
-public class GestorDeArchivos {
+public class GestorDeArchivoUsuario {
     private String nombre;
 
-    public GestorDeArchivos(String nombre){
+    public GestorDeArchivoUsuario(String nombre){
         this.nombre=nombre+".csv";
         crearArchivo(this.nombre);
     }
@@ -42,7 +42,16 @@ public class GestorDeArchivos {
             throw new RuntimeException(e);
         }
     }
+
     public String[] leerDatosCSV(){
+        String [] res=leerDatos();
+        if(res[0].equals("")){
+            res=new String[0] ;
+        }
+        return res;
+    }
+
+    private String[] leerDatos(){
         String cont = readFile(nombre);
 
         return cont == null ? null : cont.split("\\r?\\n");
@@ -86,6 +95,32 @@ public class GestorDeArchivos {
         }
         return res;
     }
+    public boolean esUsuario (String nombre){
+        File archivo = new File(this.nombre);
+        Scanner entrada = null;
+        String linea;
+        boolean res = false;
+        try {
+            entrada = new Scanner(archivo);
+            while (entrada.hasNext()) {
+                linea = entrada.nextLine();
+                String [] data=linea.split(",");
+                if (data[1].equals(nombre)) {
+                    if(data[2].equals(TipoUsuario.USUARIO.name()))
+                    res = true;
+                    break;
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            if (entrada != null) {
+                entrada.close();
+            }
+        }
+        return res;
+    }
 
     public int existeDato(String dato){
         File archivo = new File(this.nombre);
@@ -111,12 +146,6 @@ public class GestorDeArchivos {
             }
         }
         return res;
-    }
-
-    public boolean tieneRaccion(int idU){
-        boolean res= false;
-
-        return  res;
     }
 
 }

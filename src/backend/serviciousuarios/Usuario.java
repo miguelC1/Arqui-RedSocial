@@ -25,12 +25,5 @@ public class Usuario {
         this.estado=TipoUsuario.USUARIO;
     }
 
-
-
-
-    private TipoUsuario getTipoUsuario(){
-        return estado;
-    }
-
 }
 

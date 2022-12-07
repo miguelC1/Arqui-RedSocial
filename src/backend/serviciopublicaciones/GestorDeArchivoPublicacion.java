@@ -1,29 +1,27 @@
-package backend.serviciousuarios;
+package backend.serviciopublicaciones;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.Scanner;
 
 
-public class GestorDeArchivos {
+public class GestorDeArchivoPublicacion {
     private String nombre;
 
-    public GestorDeArchivos(String nombre){
+    public GestorDeArchivoPublicacion(String nombre){
         this.nombre=nombre+".csv";
         crearArchivo(this.nombre);
     }
+
     private void crearArchivo(String nombre){
         File archivo = new File(nombre);
         try {
-            //System.out.println("ya sta creado");
             FileWriter escritor = new FileWriter(archivo,true);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     public void escribirDatosEnCSV(String contenido){
         try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre,true))) {
             escritor.printf(contenido + "\n");
@@ -32,6 +30,7 @@ public class GestorDeArchivos {
             throw new RuntimeException(e);
         }
     }
+    //escribir en el csv2todo un arreglo
     public void escribirDeCerroEnCSV(String [] contenido){
         try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre))) {
             for (String fila: contenido){
@@ -42,12 +41,19 @@ public class GestorDeArchivos {
             throw new RuntimeException(e);
         }
     }
+
     public String[] leerDatosCSV(){
-        String cont = readFile(nombre);
-
-        return cont == null ? null : cont.split("\\r?\\n");
-
+        String [] res=leerDatos();
+        if(res[0].equals("")){
+           res=new String[0] ;
+        }
+        return res;
     }
+    private String[] leerDatos(){
+        String cont = readFile(nombre);
+        return cont == null ? null : cont.split("\\r?\\n");
+    }
+
     private static String readFile(String filePath) {
         File file = new File(filePath);
         if(!file.isFile() || file.isDirectory()) {
@@ -61,58 +67,7 @@ public class GestorDeArchivos {
         }
     }
 
-    public int existeNombre(String nombre){
-        File archivo = new File(this.nombre);
-        Scanner entrada = null;
-        String linea;
-        int res = 0;
-        try {
-            entrada = new Scanner(archivo);
-            while (entrada.hasNext()) {
-                linea = entrada.nextLine();
-                String [] data=linea.split(",");
-                if (data[1].equals(nombre)) {
-                    res = Integer.parseInt(data[0]);
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            if (entrada != null) {
-                entrada.close();
-            }
-        }
-        return res;
-    }
-    public boolean esUsuario (String nombre){
-        File archivo = new File(this.nombre);
-        Scanner entrada = null;
-        String linea;
-        boolean res = false;
-        try {
-            entrada = new Scanner(archivo);
-            while (entrada.hasNext()) {
-                linea = entrada.nextLine();
-                String [] data=linea.split(",");
-                if (data[1].equals(nombre)) {
-                    if(data[2].equals(TipoUsuario.USUARIO.name()))
-                    res = true;
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            if (entrada != null) {
-                entrada.close();
-            }
-        }
-        return res;
-    }
-
+    //nos devuelve la posicion si existe toda la fila
     public int existeDato(String dato){
         File archivo = new File(this.nombre);
         Scanner entrada = null;

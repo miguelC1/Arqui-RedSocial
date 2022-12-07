@@ -1,5 +1,4 @@
 package frontend;
-
 import backend.serviciopublicaciones.Publicacion;
 import backend.serviciopublicaciones.ServicioPublicaciones;
 import backend.servicioreacciones.Emocion;
@@ -9,17 +8,20 @@ import backend.serviciousuarios.Usuario;
 
 import java.util.*;
 public class IU {
-    Scanner sc;
-    ServicioUsuarios servicioUsuarios;
-    ServicioReacciones servicioReacciones;
-    ServicioPublicaciones servicioPublicaciones;
-    Usuario usuario;
-    int idU;
+    private Scanner sc;
+    private ServicioUsuarios servicioUsuarios;
+    private ServicioReacciones servicioReacciones;
+    private ServicioPublicaciones servicioPublicaciones;
+    private Usuario usuario;
+    private Usuario usuarioCovertido;
+    private List<String>listaUsurioConvertidos;
+    private int idU;
     public IU(ServicioPublicaciones servicioPublicaciones, ServicioReacciones servicioReacciones, ServicioUsuarios servicioUsuarios) {
         sc=new Scanner(System.in);
         this.servicioPublicaciones =servicioPublicaciones;
         this.servicioReacciones =servicioReacciones;
         this.servicioUsuarios =servicioUsuarios;
+        listaUsurioConvertidos= new ArrayList<>();
     }
 
     public  void iniciar(){
@@ -79,10 +81,15 @@ public class IU {
             System.out.println("(== PUBLICACION "+listaP.get(i)+" ==)");
             publicacion= servicioPublicaciones.buscarPublicacion(listaP.get(i));
             if(verificarCantidadReaccione(listaP.get(i))){
+                String nombreCandidato = (servicioUsuarios.buscarUsuario(publicacion.getIdUsuario())).getNombre();
+                if(!listaUsurioConvertidos.contains(nombreCandidato)){
+                    listaUsurioConvertidos.add(nombreCandidato);
+                }
                 servicioUsuarios.cambiarAUsuario(publicacion.getIdUsuario());
             }
             mostrarPublicacion(publicacion, listaP.get(i));
         }
+        mensajeCantidadosConvertidos();
     }
 
 
@@ -198,11 +205,11 @@ public class IU {
     public void TextosMenuCandidato(){
         System.out.println("///// MENU DE OPERACIONES DE CANDIDATO/////");
         if(!verificarRealizoPublicacion()){
-            System.out.println("// 1) Crear Nueva Publicacion          //");
+            System.out.println("// 1) Crear Nueva Publicacion            //");
         }
-        System.out.println("// 2) Reaccionar Publicacion           //");
-        System.out.println("// 3) Cambiar Usuario                  //");
-        System.out.println("// 0) Cerrar Sesion                    //");
+        System.out.println("// 2) Reaccionar Publicacion             //");
+        System.out.println("// 3) Cambiar Usuario                    //");
+        System.out.println("// 0) Cerrar Sesion                      //");
         System.out.println("/////////////////////////////////////////");
     }
 
@@ -213,7 +220,7 @@ public class IU {
             System.out.println(" = "+act.getIdUsuario()+" = "+ act.getContenido()+" = "+ act.getFecha());
         }
     }
-   
+
 
     public void mostrarReacciones(int idP){
         Emocion emocion= Emocion.Like;
@@ -229,7 +236,7 @@ public class IU {
         System.out.println();
     }
 
-     private boolean verificarRealizoPublicacion(){
+    private boolean verificarRealizoPublicacion(){
         boolean res=false;
         List<Integer> lista= servicioPublicaciones.listarPublicaciones();
         for(int i=0; i<lista.size(); i++){
@@ -239,7 +246,7 @@ public class IU {
             }
         }
         return res;
-     }
+    }
     private boolean verificarCantidadReaccione(int idP){
         boolean res=false;
         int cantidad=0;
@@ -254,5 +261,11 @@ public class IU {
         return res;
     }
 
-
+     private void mensajeCantidadosConvertidos(){
+        for (int i=0; i<listaUsurioConvertidos.size(); i++){
+            System.out.println("#########################################################################################################");
+            System.out.println( "La publicacion de "+listaUsurioConvertidos.get(i)+" |tuvo mas de 3 Reacciones|,  "+listaUsurioConvertidos.get(i)+" pasa ser USUARIO");
+            System.out.println("#########################################################################################################");
+        }
+     }
 }
