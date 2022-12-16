@@ -1,6 +1,7 @@
 package backend.serviciousuarios;
 
 
+import com.sun.source.tree.ReturnTree;
 
 public class Usuario {
     private int id;
@@ -24,6 +25,11 @@ public class Usuario {
     public void cambiarAUsuario(){
         this.estado=TipoUsuario.USUARIO;
     }
+
+    /*public String cambiarAUsuario(){
+        String res= "es Usuario";
+        return res;
+    }*/
 
 }
 

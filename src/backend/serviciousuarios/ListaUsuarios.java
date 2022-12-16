@@ -12,14 +12,6 @@ public class ListaUsuarios {
         listaDeUsuarios = new ArrayList<>();
         cargarDatosLista();
     }
-
-    private void usuarioPorDefecto(){
-        int idActual=archivo.existeNombre("Maria Jimenes");
-        if(idActual==0){
-            archivo.escribirDatosEnCSV("1,Maria Jimenes");
-        }
-    }
-
     public int agregarUsuario(String nombre) {
         int res=archivo.existeNombre(nombre);
         String [] datos=archivo.leerDatosCSV();

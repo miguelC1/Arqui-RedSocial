@@ -17,11 +17,11 @@ public class ListaReacciones {
     public void agregarReaccion(int idPublicacion, int idUsuario, Emocion reaccion) {
         String [] datos=archivo.leerDatosCSV();
         String nombreReaccion= reaccion.name();
-        if (datos[0].length()==0){
+        if (datos.length==0){
             archivo.escribirDatosEnCSV(idPublicacion+","+nombreReaccion+","+idUsuario);
             listaDeReacciones.add(new Reaccion(idPublicacion,nombreReaccion,idUsuario));
         }else {
-            if(verifivarReaccionUsuario(idPublicacion,idUsuario)){
+            if(verificarReaccionUsuario(idPublicacion,idUsuario)){
                 eliminarReacccion(idPublicacion, idUsuario);
                 listaDeReacciones.add(new Reaccion(idPublicacion,nombreReaccion,idUsuario));
                 actualizarDatos(transformarListaEnArregloDeCadenas());
@@ -58,7 +58,7 @@ public class ListaReacciones {
 
     private void cargarDatosLista() {
         String [] datos=archivo.leerDatosCSV();
-        if(!datos[0].equals("")) {
+        if(datos.length!=0) {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 int idP = Integer.parseInt(cad[0]);
@@ -77,7 +77,7 @@ public class ListaReacciones {
         }
         return res;
     }
-    private boolean verifivarReaccionUsuario(int idP, int idU){
+    private boolean verificarReaccionUsuario(int idP, int idU){
         boolean res=false;
         for (Reaccion reaccion: listaDeReacciones) {
             if(reaccion.getIdPublicacion()==idP && reaccion.getIdUsuario()==idU){

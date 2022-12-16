@@ -21,6 +21,7 @@ public class ListaPublicaciones {
     public int agregarPublicacion(int idUsuario, String contenido) {
         String[] datos = archivo.leerDatosCSV();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+
         this.fecha=""+ LocalDateTime.now().format(formatter);
         int res=0;
         if (datos.length==0) {
@@ -55,7 +56,7 @@ public class ListaPublicaciones {
     public List<Integer> listarPublicaciones() {
         List<Integer>lista=new ArrayList<>();
         String []datos=archivo.leerDatosCSV();
-        if(!datos[0].equals("")) {
+        if(datos.length!=0) {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 lista.add(Integer.parseInt(cad[0]));
@@ -72,7 +73,7 @@ public class ListaPublicaciones {
 
     private void cargarDatosLista() {
         String[] datos = archivo.leerDatosCSV();
-        if (!datos[0].equals("")) {
+        if (datos.length!=0) {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 String contenido = contruirContenido(cad);
@@ -97,11 +98,19 @@ public class ListaPublicaciones {
         return res;
     }
 
-    private void agregarPublicacionDefecto() {
-
-        String contenido="1,1,\"El Pique Macho y el arroz, no le va, no?\",2022-11-06T19:12:04.213293600";
-        if(archivo.existeDato(contenido)==0) {
-            archivo.escribirDatosEnCSV(contenido);
+    public int buscarIdPublicacionPorIDUsuario(int idU){
+        int res=0;
+        System.out.println("buscarIdPublicacionPorIDUsuario");
+        String[] datos = archivo.leerDatosCSV();
+        if (datos.length!=0) {
+            for (String dato : datos) {
+                String[] cad = dato.split(",");
+                if(cad[1].equals(""+idU)){
+                    res = Integer.parseInt(cad[0]);
+                    break;
+                }
+            }
         }
+        return res;
     }
 }

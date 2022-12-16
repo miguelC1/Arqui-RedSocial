@@ -12,5 +12,6 @@ public class Main {
         IU iu = new IU(servicioPublicaciones, servicioReacciones, servicioUsuarios);
 
         iu.iniciar();
+
     }
 }

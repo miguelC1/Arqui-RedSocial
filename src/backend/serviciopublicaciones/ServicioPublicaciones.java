@@ -24,6 +24,9 @@ public class ServicioPublicaciones {
         return listaPublicaciones.listarPublicaciones();
     }
 
-
+    //nuevo Metodo
+    public int buscarIdPublicacionPorIDUsuario(int idUsuario){
+        return listaPublicaciones.buscarIdPublicacionPorIDUsuario(idUsuario);
+    }
 }
 
