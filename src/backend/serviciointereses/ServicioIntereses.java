@@ -10,21 +10,9 @@ public class ServicioIntereses {
     public ServicioIntereses() {
         listaIntereses= new ListaIntereses();
     }
-
-    public int agregarInteres(String interes) {
-        int res=listaIntereses.agregarInteres(interes);
+    public int registrarInteres(String nombreInteres) {
+        int res=listaIntereses.agregarInteres(nombreInteres);
         return res;
-    }
-
-    public void agregarPublicacionAinteres(int idInteres ,int idPublicacion) {
-        listaIntereses.agregarInteresPublicaciones(idInteres, idPublicacion);
-    }
-
-    public void agregarInteresUsuarios(int idInteres,int idUsuario){
-        listaIntereses.agregarInteresUsuarios(idInteres,idUsuario);
-    }
-    public int buscaIDInteresPorPublicacion(int idPublicacion){
-        return listaIntereses.buscaIDInteresPorPublicacion(idPublicacion);
     }
 
     public Interes buscarInteres(int idInteres) {
@@ -35,4 +23,5 @@ public class ServicioIntereses {
     public List<Integer> listarIntereses() {
         return listaIntereses.listarIntereses();
     }
+
 }

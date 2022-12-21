@@ -19,7 +19,6 @@ public class ListaUsuarios {
         if (datos[0].length()==0){
             id=1;
             archivo.escribirDatosEnCSV(id+","+nombre+","+TipoUsuario.CANDIDATO.name());
-            //listaUsuarios.add(new Usuario(id,nombre));
             res=id;
         }else {
             if(res==0){

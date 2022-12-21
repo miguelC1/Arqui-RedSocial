@@ -21,7 +21,6 @@ public class ListaPublicaciones {
     public int agregarPublicacion(int idUsuario, String contenido) {
         String[] datos = archivo.leerDatosCSV();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-
         this.fecha=""+ LocalDateTime.now().format(formatter);
         int res=0;
         if (datos.length==0) {
@@ -42,12 +41,16 @@ public class ListaPublicaciones {
 
     public Publicacion buscarPublicacion(int idPublicacion) {
         Publicacion res = null;
-        List<Integer> lista=listarPublicaciones();
-        Collections.reverse(lista);
-        for (int i = 0; i < lista.size(); i++) {
-            int idP=lista.get(i);
-            if (idP==idPublicacion) {
-                res = listaPublicaciones.get(i);
+        String []datos=archivo.leerDatosCSV();
+        if(datos.length!=0) {
+            for (String dato : datos) {
+                String[] cad = dato.split(",");
+                int idP = Integer.parseInt(cad[0]);
+                if(idP==idPublicacion){
+                    int idU = Integer.parseInt(cad[1]);
+                    String contenido = contruirContenido(cad);
+                    res= new Publicacion(idP,idU,contenido,cad[cad.length-1]);
+                }
             }
         }
         return res;
@@ -64,11 +67,6 @@ public class ListaPublicaciones {
         }
         Collections.reverse(lista);
         return lista;
-    }
-
-
-    private void actualizarDatos(String[] nombre) {
-        archivo.escribirDeCerroEnCSV(nombre);
     }
 
     private void cargarDatosLista() {
@@ -98,19 +96,4 @@ public class ListaPublicaciones {
         return res;
     }
 
-    public int buscarIdPublicacionPorIDUsuario(int idU){
-        int res=0;
-        System.out.println("buscarIdPublicacionPorIDUsuario");
-        String[] datos = archivo.leerDatosCSV();
-        if (datos.length!=0) {
-            for (String dato : datos) {
-                String[] cad = dato.split(",");
-                if(cad[1].equals(""+idU)){
-                    res = Integer.parseInt(cad[0]);
-                    break;
-                }
-            }
-        }
-        return res;
-    }
 }

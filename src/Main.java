@@ -1,5 +1,6 @@
 import backend.serviciopublicaciones.GestorDeArchivoPublicacion;
 import backend.serviciopublicaciones.ServicioPublicaciones;
+import backend.servicioreacciones.GestorDeArchivoReaccion;
 import backend.servicioreacciones.ServicioReacciones;
 import backend.serviciousuarios.ServicioUsuarios;
 import frontend.IU;
@@ -12,6 +13,9 @@ public class Main {
         IU iu = new IU(servicioPublicaciones, servicioReacciones, servicioUsuarios);
 
         iu.iniciar();
-
+        /*GestorDeArchivoReaccion reaccion= new GestorDeArchivoReaccion("corma");
+        for(int  i=0; i<reaccion.leerDatosCSV().length; i++)
+            System.out.println(reaccion.leerDatosCSV()[i]);
+*/
     }
 }

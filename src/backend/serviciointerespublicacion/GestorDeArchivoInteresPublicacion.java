@@ -1,4 +1,4 @@
-package backend.serviciointereses;
+package backend.serviciointerespublicacion;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,10 +7,10 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.util.Scanner;
 
-public class GestorDeArchivoIntereses {
+public class GestorDeArchivoInteresPublicacion {
     private String nombre;
 
-    public GestorDeArchivoIntereses(String nombre){
+    public GestorDeArchivoInteresPublicacion(String nombre){
         this.nombre=nombre+".csv";
         crearArchivo(this.nombre);
     }
@@ -30,18 +30,6 @@ public class GestorDeArchivoIntereses {
         try{
             PrintWriter escritor = new PrintWriter(new FileWriter(nombre,true));
             escritor.printf(contenido + "\n");
-            escritor.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    public void escribirDeCerroEnCSV(String [] contenido){
-        try{
-            PrintWriter escritor = new PrintWriter(new FileWriter(nombre));
-            for (String fila: contenido){
-                escritor.printf(fila + "\n");
-            }
             escritor.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());

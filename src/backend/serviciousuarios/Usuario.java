@@ -1,8 +1,6 @@
 package backend.serviciousuarios;
 
 
-import com.sun.source.tree.ReturnTree;
-
 public class Usuario {
     private int id;
     private String nombre;

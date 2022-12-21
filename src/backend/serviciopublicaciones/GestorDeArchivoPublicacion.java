@@ -14,44 +14,45 @@ public class GestorDeArchivoPublicacion {
     }
 
     private void crearArchivo(String nombre){
-        File archivo = new File(nombre);
         try {
-            FileWriter escritor = new FileWriter(archivo,true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            File file = new File(nombre);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
     public void escribirDatosEnCSV(String contenido){
-        try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre,true))) {
+        try{
+            PrintWriter escritor = new PrintWriter(new FileWriter(nombre,true));
             escritor.printf(contenido + "\n");
             escritor.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
-    //escribir en el csv2todo un arreglo
+
     public void escribirDeCerroEnCSV(String [] contenido){
-        try(PrintWriter escritor = new PrintWriter(new FileWriter(nombre))) {
+        try{
+            PrintWriter escritor = new PrintWriter(new FileWriter(nombre));
             for (String fila: contenido){
                 escritor.printf(fila + "\n");
             }
             escritor.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
 
     public String[] leerDatosCSV(){
-        String [] res=leerDatos();
-        if(res[0].equals("")){
-           res=new String[0] ;
+        String cont = readFile(nombre);
+        String [] res=cont.split("\\n");
+        if(res==null){
+            return null;
         }
         return res;
-    }
-    private String[] leerDatos(){
-        String cont = readFile(nombre);
-        return cont == null ? null : cont.split("\\r?\\n");
     }
 
     private static String readFile(String filePath) {

@@ -2,21 +2,13 @@ package backend.serviciointereses;
 
 public class Interes {
     private int id;
-    private String nombre;
-    private String fecha;
+    private String nombreInteres;
 
-    public Interes(int id,String  nombre,String fecha){
+    public Interes(int id,String  nombre){
         this.id=id;
-        this.nombre=nombre;
-        this.fecha=fecha;
-
+        this.nombreInteres =nombre;
     }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getFecha() {
-        return fecha;
+    public String getNombreInteres() {
+        return nombreInteres;
     }
 }
