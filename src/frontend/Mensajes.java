@@ -1,15 +1,6 @@
 package frontend;
 
-import backend.serviciointereses.ServicioIntereses;
-import backend.serviciopublicaciones.Publicacion;
-
 import backend.serviciopublicaciones.ServicioPublicaciones;
-import backend.servicioreacciones.Emocion;
-import backend.serviciousuarios.Usuario;
-import frontend.ModeloSalida.PublicacionSalida;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Mensajes {
@@ -45,11 +36,12 @@ public class Mensajes {
     }
 
     public void textoPublicarPublicaconConInteresoSinInteres() {
-        System.out.println("1) crear puclicacion con 1 Interes");
+        System.out.println("1) crear puclicacion con Interes");
         System.out.println("2) crear sin puclicacion Interes");
     }
 
     public void textoMostrarReacciones(){
+        System.out.println("SELECCIONAR UNA REACCION");
         System.out.println("1)Like  2)Love  3)Sad  4)Happy  5)Mad  6)Surprise  7)Care  8)Indifferent  9)Explain ");
         System.out.println();
     }
@@ -58,8 +50,8 @@ public class Mensajes {
         System.out.println("///// MENU DE OPERACIONES DE USUARIO/////");
         System.out.println("// 1) Crear Nueva Publicacion          //");
         System.out.println("// 2) Reaccionar Publicacion           //");
-        System.out.println("// 3) Cerrar Sesion                  //");
-        System.out.println("// 0)==> Terminar Ejecucion           //");
+        System.out.println("// 3) Cerrar Sesion                    //");
+        System.out.println("// 0)==> Terminar Ejecucion            //");
         System.out.println("/////////////////////////////////////////");
     }
     public void TextosMenuCandidato(boolean realizoP){
@@ -79,8 +71,19 @@ public class Mensajes {
         System.out.println("2) SALTAR OPCION");
     }
 
-    public void textoReaccionarPublicacion() {
+    public void textoSeleccionarPublicacion() {
         System.out.println("NUMERO DE PUBLICACION");
-        System.out.println("SELECCIONAR UNA REACCION");
+
+    }
+
+    public void textoMensajeCantidadosConvertidos(String nombre){
+            System.out.println("#########################################################################################################");
+            System.out.println( "La publicacion de "+nombre+" |tuvo mas de 3 Reacciones|,  "+nombre+" pasa ser USUARIO");
+            System.out.println("#########################################################################################################");
+    }
+
+    public void  textoAsociarInteresAPublicacion(){
+        System.out.println("ESCRIBIR NOMBRE DE INTERES");
+        System.out.println("Ejemplo del Texto:  deporte,chistes");
     }
 }

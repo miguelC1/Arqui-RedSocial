@@ -31,7 +31,7 @@ public class GestorDeArchivoUsuario {
             escritor.printf(contenido + "\n");
             escritor.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e.getMessage());
         }
     }
     public void escribirDeCerroEnCSV(String [] contenido){
@@ -50,7 +50,10 @@ public class GestorDeArchivoUsuario {
         String cont = readFile(nombre);
         String [] res=cont.split("\\n");
         if(res==null){
-            return null;
+            res= new String[0];
+        }
+        if(res[0].equals("")){
+            res= new String[0];
         }
         return res;
     }

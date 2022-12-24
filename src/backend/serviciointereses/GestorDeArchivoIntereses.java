@@ -36,28 +36,16 @@ public class GestorDeArchivoIntereses {
         }
     }
 
-    public void escribirDeCerroEnCSV(String [] contenido){
-        try{
-            PrintWriter escritor = new PrintWriter(new FileWriter(nombre));
-            for (String fila: contenido){
-                escritor.printf(fila + "\n");
-            }
-            escritor.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     public String[] leerDatosCSV(){
-        String [] res=leerDatos();
+        String cont = readFile(nombre);
+        String [] res=cont.split("\\n");
+        if(res==null){
+            res= new String[0];
+        }
         if(res[0].equals("")){
-           res=new String[0] ;
+            res= new String[0];
         }
         return res;
-    }
-    private String[] leerDatos(){
-        String cont = readFile(nombre);
-        return cont == null ? null : cont.split("\\r?\\n");
     }
 
     private static String readFile(String filePath) {
@@ -73,31 +61,5 @@ public class GestorDeArchivoIntereses {
         }
     }
 
-    //nos devuelve la posicion si existe toda la fila
-    public int existeDato(String dato){
-        File archivo = new File(this.nombre);
-        Scanner entrada = null;
-        String linea;
-        int res = 0;
-        try {
-            entrada = new Scanner(archivo);
-            while (entrada.hasNext()) {
-                linea = entrada.nextLine();
-                String [] data=linea.split(",");
-                if (linea.equals(dato)) {
-                    res = Integer.parseInt(data[0]);
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        finally {
-            if (entrada != null) {
-                entrada.close();
-            }
-        }
-        return res;
-    }
 
 }

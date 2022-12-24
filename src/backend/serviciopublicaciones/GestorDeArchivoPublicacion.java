@@ -34,23 +34,14 @@ public class GestorDeArchivoPublicacion {
         }
     }
 
-    public void escribirDeCerroEnCSV(String [] contenido){
-        try{
-            PrintWriter escritor = new PrintWriter(new FileWriter(nombre));
-            for (String fila: contenido){
-                escritor.printf(fila + "\n");
-            }
-            escritor.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     public String[] leerDatosCSV(){
         String cont = readFile(nombre);
         String [] res=cont.split("\\n");
         if(res==null){
-            return null;
+            res= new String[0];
+        }
+        if(res[0].equals("")){
+            res= new String[0];
         }
         return res;
     }

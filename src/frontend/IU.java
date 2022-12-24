@@ -1,6 +1,6 @@
 package frontend;
-import backend.serviciointerespublicacion.ServicioInteresPublicacion;
-import backend.serviciointeresusuario.ServicioInteresUsuario;
+
+import backend.serviciorelacionador.ServicioRelacionador;
 import backend.serviciointereses.ServicioIntereses;
 import backend.serviciopublicaciones.Publicacion;
 import backend.serviciopublicaciones.ServicioPublicaciones;
@@ -16,23 +16,25 @@ public class IU {
     private ServicioReacciones servicioReacciones;
     private ServicioPublicaciones servicioPublicaciones;
     private ServicioIntereses servicioIntereses;
-    private ServicioInteresPublicacion servicioInteresPublicacion;
-    private ServicioInteresUsuario servicioInteresUsuario;
+    private ServicioRelacionador servicioInteresPublicacion;
+    private ServicioRelacionador servicioInteresUsuario;
     private Usuario usuario;
     private Mensajes mensaje;
     private List<String>listaUsurioConvertidos;
     private int idU;
     private int idP;
-    public IU(ServicioPublicaciones servicioPublicaciones, ServicioReacciones servicioReacciones, ServicioUsuarios servicioUsuarios) {
+    public IU(ServicioPublicaciones servicioPublicaciones, ServicioReacciones servicioReacciones,
+              ServicioUsuarios servicioUsuarios,ServicioIntereses servicioIntereses,
+              ServicioRelacionador servicioInteresUsuario,ServicioRelacionador servicioInteresPublicacion) {
         sc=new Scanner(System.in);
         mensaje= new Mensajes();
         this.servicioPublicaciones =servicioPublicaciones;
         this.servicioReacciones =servicioReacciones;
         this.servicioUsuarios =servicioUsuarios;
+        this.servicioIntereses=servicioIntereses;
+        this.servicioInteresPublicacion= servicioInteresPublicacion;
+        this.servicioInteresUsuario=servicioInteresUsuario;
         this.listaUsurioConvertidos= new ArrayList<>();
-        this.servicioIntereses=new ServicioIntereses();
-        this.servicioInteresPublicacion= new ServicioInteresPublicacion();
-        this.servicioInteresUsuario=new ServicioInteresUsuario();
     }
 
     public  void iniciar(){
@@ -76,7 +78,7 @@ public class IU {
             int caso=sc.nextInt();
             if(caso==1){
                 crearPublicacion();
-                asociarpublicacionAInteres();
+                asociarInteresAPublicacion();
             }else if(caso==2){
                 crearPublicacion();
             }
@@ -108,9 +110,9 @@ public class IU {
         mostrarLaterales(cad);
         mostrarLaterales(publicacion.getFecha());
         System.out.println ("**==========================================================================================**");
+        mostrarInteres(idP);
         mostrarLaterales(publicacion.getContenido());
         System.out.println ("**==========================================================================================**");
-        tieneInteres(idP);
         mostrarReacciones(idP);
         System.out.println ("**********************************************************************************************");
         System.out.println();
@@ -119,12 +121,14 @@ public class IU {
     private String leerEntreadaTeclado(){
         String cad="";
         cad=sc.nextLine();
-        if(!cad.equals("")){
-            return cad;
+        if(cad.equals("")){
+            cad= sc.nextLine();
+            while(cad.equals("")){
+                System.out.println("Ingresar texto");
+                cad= sc.nextLine();
+            }
         }
-        else {
-            return sc.nextLine();
-        }
+        return cad;
     }
 
     private void mostrarLaterales(String texto){
@@ -137,7 +141,7 @@ public class IU {
 
     private void menuUsuario(){
         int caso;
-        if(verificarCantidadInteresesDeUsuario()){
+        if(!tieneInteresesUsuario()){
             agregarIntereses();
         }
         mostrarMuroPublicaciones();
@@ -155,6 +159,7 @@ public class IU {
             mensaje.TextosMenuUsuario();
         }
     }
+
 
     private void menuCandidato(){
         int caso;
@@ -174,14 +179,17 @@ public class IU {
         }
     }
     private void reaccionarPublicacion(){
-        mensaje.textoReaccionarPublicacion();
+        mensaje.textoSeleccionarPublicacion();
         int nP=sc.nextInt();
-        mensaje.textoMostrarReacciones();
-        int nR=sc.nextInt();
-        System.out.println(nR);
-        nR=nR-1;
-        servicioReacciones.agregarReaccion(nP,idU,Emocion.values()[nR]);
-
+        if(!reacionarMismaPublicacion(nP)) {
+            mensaje.textoMostrarReacciones();
+            int nR = sc.nextInt();
+            nR = nR - 1;
+            servicioReacciones.agregarReaccion(nP, idU, Emocion.values()[nR]);
+        }else{
+            System.out.println("No Puedes Reaccionar tu misma publicacion");
+            reaccionarPublicacion();
+        }
     }
     public void TextosMenuCandidato(){
         mensaje.TextosMenuCandidato(verificarRealizoPublicacion());
@@ -227,67 +235,88 @@ public class IU {
 
      private void mensajeCantidadosConvertidos(){
         for (int i=0; i<listaUsurioConvertidos.size(); i++){
-            System.out.println("#########################################################################################################");
-            System.out.println( "La publicacion de "+listaUsurioConvertidos.get(i)+" |tuvo mas de 3 Reacciones|,  "+listaUsurioConvertidos.get(i)+" pasa ser USUARIO");
-            System.out.println("#########################################################################################################");
+            mensaje.textoMensajeCantidadosConvertidos(listaUsurioConvertidos.get(i));
         }
      }
      private void agregarIntereses(){
-         mensaje.textoMostrarTextosAgregarIntereses();
+         System.out.println("AGRESAR INTERES");
          int caso;
          String interes;
+         interes= leerEntreadaTeclado();
+         int idNuevo=servicioIntereses.registrarInteres(interes);
+         servicioInteresUsuario.agregarInteresRelacionado(idNuevo,idU);
+         tieneCantidadInteresesDeUsuario();
          boolean bandera=true;
          while (bandera){
+             mensaje.textoMostrarTextosAgregarIntereses();
              caso= sc.nextInt();
              if(caso==1){
                  System.out.println("AGRESAR INTERES");
                  interes= leerEntreadaTeclado();
                  int id=servicioIntereses.registrarInteres(interes);
-                 servicioInteresUsuario.agregarInteresUsuario(id,idU);
-                 bandera=verificarCantidadInteresesDeUsuario();
-                 if(bandera){
-                     mensaje.textoMostrarTextosAgregarIntereses();
-                 }
+                 servicioInteresUsuario.agregarInteresRelacionado(id,idU);
+                 bandera= tieneCantidadInteresesDeUsuario();
              }else if(caso==2){
                 bandera=false;
              }
          }
      }
 
-    private void asociarpublicacionAInteres() {
+    private void asociarInteresAPublicacion() {
         Publicacion publicacion=servicioPublicaciones.buscarPublicacion(idP);
         mostrarPublicacion(publicacion,idP);
-        System.out.println("SELECCIONAR INTERES");
         listarInteres();
-        int num=sc.nextInt();
-        servicioInteresPublicacion.agregarInteresPublicacion(num,idP);
-
+        mensaje.textoAsociarInteresAPublicacion();
+        String entrada=leerEntreadaTeclado();
+        String  [] intereses= entrada.split(",");
+        for(int i=0; i< intereses.length; i++){
+            int num=servicioIntereses.registrarInteres(intereses[i]);
+            servicioInteresPublicacion.agregarInteresRelacionado(num,idP);
+        }
     }
 
     private void listarInteres(){
         List<Integer> lista=servicioIntereses.listarIntereses();
         for(int i=0; i<lista.size(); i++){
-            System.out.println(i+1+") "+servicioIntereses.buscarInteres(lista.get(i)).getNombreInteres());
+            System.out.println("| "+servicioIntereses.buscarInteres(lista.get(i)).getNombreInteres());
         }
-        System.out.println("0) Saltar Paso");
     }
-    private void tieneInteres(int idP){
-        List<Integer> lista=servicioInteresPublicacion.listarInteresesPorPublicacion(idP);
-        System.out.print("INTERES: ");
+    private void mostrarInteres(int idP){
+        List<Integer> lista=servicioInteresPublicacion.listarInteresesRelacionados(idP);
+        System.out.print("INTERES: => ");
         for(int i=0; i<lista.size(); i++){
-           System.out.print(" "+servicioIntereses.buscarInteres(lista.get(i)));
+           System.out.print(" "+servicioIntereses.buscarInteres(lista.get(i)).getNombreInteres()+",");
         }
+        System.out.println();
     }
 
-    private boolean verificarCantidadInteresesDeUsuario(){
+    private boolean tieneCantidadInteresesDeUsuario(){
         boolean res= false;
-        int cantidad=servicioInteresUsuario.listarInteresesPorUsuario(idU).size();
-        System.out.println("cantidad de interes USuario "+cantidad);
+        int cantidad=servicioInteresUsuario.listarInteresesRelacionados(idU).size();
+        System.out.println("Cantidad de Interes Propio  "+cantidad);
         if(cantidad<3){
             res=true;
         }
-        System.out.println(res);
         return res;
+    }
+
+    private boolean reacionarMismaPublicacion(int idP){
+        boolean res=false;
+        Publicacion publi=servicioPublicaciones.buscarPublicacion(idP);
+        if(idU==publi.getIdUsuario()){
+            res=true;
+        }
+        return res;
+    }
+
+
+    private boolean tieneInteresesUsuario() {
+        boolean res= false;
+        int cantidad=servicioInteresUsuario.listarInteresesRelacionados(idU).size();
+        if(cantidad!=0){
+            res= true;
+        }
+        return  res;
     }
 
 }

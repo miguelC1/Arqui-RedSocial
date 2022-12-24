@@ -1,14 +1,15 @@
-package backend.servicioreacciones;
+package backend.serviciorelacionador;
 
-
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 
-
-public class GestorDeArchivoReaccion {
+public class GestorDeArchivoInteresRelacionador {
     private String nombre;
 
-    public GestorDeArchivoReaccion(String nombre){
+    public GestorDeArchivoInteresRelacionador(String nombre){
         this.nombre=nombre+".csv";
         crearArchivo(this.nombre);
     }
@@ -34,19 +35,6 @@ public class GestorDeArchivoReaccion {
         }
     }
 
-    public void escribirDeCerroEnCSV(String [] contenido){
-        try{
-            PrintWriter escritor = new PrintWriter(new FileWriter(nombre));
-            for (String fila: contenido){
-                escritor.printf(fila + "\n");
-            }
-            escritor.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
     public String[] leerDatosCSV(){
         String cont = readFile(nombre);
         String [] res=cont.split("\\n");
@@ -59,7 +47,7 @@ public class GestorDeArchivoReaccion {
         return res;
     }
 
-    public static String readFile(String filePath) {
+    private static String readFile(String filePath) {
         File file = new File(filePath);
         if(!file.isFile() || file.isDirectory()) {
             return null;
@@ -71,4 +59,6 @@ public class GestorDeArchivoReaccion {
             return null;
         }
     }
+
+
 }

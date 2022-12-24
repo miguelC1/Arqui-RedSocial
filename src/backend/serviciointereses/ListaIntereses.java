@@ -1,7 +1,5 @@
 package backend.serviciointereses;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +26,7 @@ public class ListaIntereses {
         }
         return id;
     }
+
 
     public Interes buscarInteres(int idInteres) {
         Interes res = null;
@@ -69,9 +68,12 @@ public class ListaIntereses {
     }
     private boolean verificarSiExisteInteres(String nombre){
         boolean res=false;
-        for (Interes interes: listaDeIntereses){
-            if(interes.getNombreInteres().equals(nombre)){
+        String [] datos= archivoInteres.leerDatosCSV();
+        for (String dato: datos){
+            String [] cad=dato.split(",");
+            if(nombre.equals(cad[1])){
                 res=true;
+                id=Integer.parseInt(cad[0]);
             }
         }
         return  res;

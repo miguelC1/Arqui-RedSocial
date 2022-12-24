@@ -42,7 +42,7 @@ public class ListaPublicaciones {
     public Publicacion buscarPublicacion(int idPublicacion) {
         Publicacion res = null;
         String []datos=archivo.leerDatosCSV();
-        if(datos.length!=0) {
+        if(datos.length!=0 ) {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 int idP = Integer.parseInt(cad[0]);
@@ -71,7 +71,7 @@ public class ListaPublicaciones {
 
     private void cargarDatosLista() {
         String[] datos = archivo.leerDatosCSV();
-        if (datos.length!=0) {
+        if (datos.length!=0 && !datos[0].equals("")) {
             for (String dato : datos) {
                 String[] cad = dato.split(",");
                 String contenido = contruirContenido(cad);
